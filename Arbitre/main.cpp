@@ -4,6 +4,6 @@ using namespace std;
 
 int main()
 {
-	cout << "Projet RESOLUTION" << endl;
+	cout << "Projet ARBITRE" << endl;
 	return 0;
 }
