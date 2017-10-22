@@ -22,5 +22,7 @@ int main(int argc, char *argv[])
 	data.ParseFile("opera.in");
 	cout << data << endl;
 	cout << data(333, 270) << endl;
+
+	data.Resolution();
 	return 0;
 }

@@ -9,6 +9,7 @@ public:
 	ProblemData();
 	~ProblemData();
 	void ParseFile(const char* filename);
+	void Resolution();
 	friend std::ostream& operator<<(std::ostream& os, const ProblemData& data);
 	Object operator()(const unsigned int row, const unsigned int col);
 protected:

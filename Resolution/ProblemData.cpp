@@ -14,6 +14,11 @@ ProblemData::~ProblemData()
 {
 }
 
+void ProblemData::Resolution()
+{
+	
+}
+
 void ProblemData::ParseFile(const char * filename)
 {
 	ifstream file(filename);
