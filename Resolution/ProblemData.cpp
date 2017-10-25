@@ -47,25 +47,27 @@ void ProblemData::ParseFile(const char * filename)
 
 	
 	unsigned int currentRow = 0;
+	map.resize(row, vector<Point>(col));
 	while (currentRow < row) {
 		getline(file, line);
 		map.push_back(vector<Point>());
 		for (unsigned int currentCol = 0; currentCol < line.size(); currentCol += 1) {
 			switch (line[currentCol]) {
 			case '#':
-				map[currentRow].push_back(Point(currentRow, currentCol, MUR));
+				map[currentRow][currentCol] = Point(currentRow, currentCol, MUR);
 				break;
 
 			case '.':
-				map[currentRow].push_back(Point(currentRow, currentCol, TARGET));
+				map[currentRow][currentCol] = Point(currentRow, currentCol, TARGET);
 				break;
 
 			case '-':
-				map[currentRow].push_back(Point(currentRow, currentCol, VIDE));
+				map[currentRow][currentCol] = Point(currentRow, currentCol, VIDE);
 				break;
 
 			default:
 				cerr << "Une erreur s'est produite lors du parsing !" << endl;
+				exit(-1);
 				break;
 			}
 		}
@@ -101,7 +103,7 @@ ostream& operator<<(ostream& os, const ProblemData& data)
 
 Point ProblemData::operator()(const unsigned int row, const unsigned int col)
 {
-	return map.at(row + 1).at(col);
+	return map[row][col];
 }
 
 int ProblemData::getRow()
