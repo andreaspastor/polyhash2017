@@ -4,10 +4,10 @@
 
 | Étudiant | Tâche |
 | --- |---|
-| QUINQUENEL Nicolas | Moteur de résolution |
 | ARQUEY Antonin | Moteur de résolution |
+| PASTOR Andréas | Moteur de résolution |
 | LE CORGUILLE Laouenan | Moteur de résolution |
-| PASTOR Andréas | Arbitre et moteur de mesure des temps d'exécution |
+| QUINQUENEL Nicolas | Arbitre et moteur de mesure des temps d'exécution |
 | GUILLET Mathis | Arbitre et moteur de mesure des temps d'exécution |
 
 ### Liens 
