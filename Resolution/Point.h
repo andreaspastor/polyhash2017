@@ -7,7 +7,7 @@ class Point
 public:
 	Point();
 	Point(int x, int y, Object object);
-	unsigned int distance(Point &B);
+	unsigned int distance(const Point &B);
 	~Point();
 	int getCoordX();
 	int getCoordY();

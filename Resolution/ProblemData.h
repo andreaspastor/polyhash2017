@@ -4,15 +4,20 @@
 #include "Point.h"
 #include <vector>
 
+using namespace std;
+
 class ProblemData
 {
 public:
 	ProblemData();
 	~ProblemData();
 	void ParseFile(const char* filename);
+	vector<Point> depotRouter();
+	bool isCover(Point & ptA, Point & ptB);
+	long scoreRouters(const vector<Point>& routers);
 	void Resolution();
 	long calculMaxMoney();
-	friend std::ostream& operator<<(std::ostream& os, const ProblemData& data);
+	friend ostream& operator<<(ostream& os, const ProblemData& data);
 	Point operator()(const unsigned int row, const unsigned int col);
 
 	int getRow();
@@ -32,6 +37,6 @@ protected:
 	unsigned int maxBudget;
 	unsigned int backboneRow;
 	unsigned int backboneCol;
-	std::vector<std::vector<Point>> map;
+	vector<vector<Point>> map;
 };
 

@@ -45,24 +45,24 @@ void ProblemData::ParseFile(const char * filename)
 	file >> line;
 	backboneCol = stoi(line);
 
+	file.ignore();
 	
 	unsigned int currentRow = 0;
-	map.resize(row, vector<Point>(col));
 	while (currentRow < row) {
 		getline(file, line);
 		map.push_back(vector<Point>());
-		for (unsigned int currentCol = 0; currentCol < line.size(); currentCol += 1) {
+		for (unsigned int currentCol = 0; currentCol < line.size(); currentCol ++) {
 			switch (line[currentCol]) {
 			case '#':
-				map[currentRow][currentCol] = Point(currentRow, currentCol, MUR);
+				map[currentRow].push_back(Point(currentRow, currentCol, MUR));
 				break;
 
 			case '.':
-				map[currentRow][currentCol] = Point(currentRow, currentCol, TARGET);
+				map[currentRow].push_back(Point(currentRow, currentCol, TARGET));
 				break;
 
 			case '-':
-				map[currentRow][currentCol] = Point(currentRow, currentCol, VIDE);
+				map[currentRow].push_back(Point(currentRow, currentCol, VIDE));
 				break;
 
 			default:
@@ -73,6 +73,51 @@ void ProblemData::ParseFile(const char * filename)
 		}
 		currentRow += 1;
 	}
+	cout << map[0][0] << endl;
+}
+
+vector<Point> ProblemData::depotRouter() {
+	vector<Point> routeurs;
+	for (int x = routerRange; x < row; x += (2 * routerRange + 1)) {
+		for (int y = routerRange; y < col; y += (2 * routerRange + 1)) {
+			if (map[x][y].getType() == TARGET) {
+				routeurs.push_back(Point(x, y, ROUTER));
+			}
+		}
+	}
+	cout << routeurs.size() << endl;
+	return routeurs;
+}
+
+bool ProblemData::isCover(Point& ptA, Point& ptB)
+{
+	int xmin = fmin(ptA.getCoordX(), ptB.getCoordX());
+	int xmax = fmax(ptA.getCoordX(), ptB.getCoordX());
+	int ymin = fmin(ptA.getCoordY(), ptB.getCoordY());
+	int ymax = fmax(ptA.getCoordY(), ptB.getCoordY());
+	for (int x = xmin; x <= xmax; x++) {
+		for (int y = ymin; y <= ymax; y++) {
+			if (map[x][y].getType() == MUR) {
+				return false;
+			}
+		}
+	}
+	return true;
+}
+
+long ProblemData::scoreRouters(const vector<Point>& routers) {
+	long score = 0;
+	for (auto router : routers) {
+		for (int x = -routerRange; x <= routerRange; x++) {
+			for (int y = -routerRange; y <= routerRange; y++) {
+				if (map[router.getCoordX() + x] [router.getCoordY() + y].getType() != COVERED && isCover(router, map[router.getCoordX() + x][router.getCoordY() + y])) {
+					score += 1000;
+					map[router.getCoordX() + x][router.getCoordY() + y].setType(COVERED);//Besoin de dire COVERED pour eviter de compter 2 fois la meme cellule
+				}
+			}
+		}
+	}
+	return score;
 }
 
 long ProblemData::calculMaxMoney()

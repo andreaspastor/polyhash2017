@@ -38,7 +38,7 @@ Point::Point(int x, int y, Object object)
 	type = object;
 }
 
-unsigned int Point::distance(Point &ptB) {
+unsigned int Point::distance(const Point &ptB) {
 	int x = std::abs(coordX - ptB.coordX);
 	int y = std::abs(coordY - ptB.coordY);
 	return std::fmin(x, y) + std::abs(x - y);
