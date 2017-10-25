@@ -1,8 +1,8 @@
-# Hash Code 2017 made by Polytech Nantes students
+# Hash Code 2017 développé par des étudiants de Polytech Nantes
 
 ### Répartition des tâches
 
-| Student | Task |
+| Étudiant | Tâche |
 | --- |---|
 | QUINQUENEL Nicolas | Moteur de résolution |
 | ARQUEY Antonin | Moteur de résolution |
