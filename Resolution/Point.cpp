@@ -26,6 +26,10 @@ Object Point::getType()
 	return type;
 }
 
+void Point::setType(Object obj)
+{
+	type = obj;
+}
 
 Point::Point(int x, int y, Object object)
 {

@@ -78,7 +78,7 @@ long ProblemData::calculMaxMoney()
 	long somme = 0;
 	for (auto x: map) {
 		for (auto y : x) {
-			if (y.type == TARGET)
+			if (y.getType() == TARGET)
 			{
 				somme += 1;
 			}
@@ -101,20 +101,20 @@ ostream& operator<<(ostream& os, const ProblemData& data)
 
 Point ProblemData::operator()(const unsigned int row, const unsigned int col)
 {
-	return map.at(row).at(col);
+	return map.at(row + 1).at(col);
 }
 
-unsigned int ProblemData::getRow()
+int ProblemData::getRow()
 {
 	return row;
 }
 
-unsigned int ProblemData::getCol()
+int ProblemData::getCol()
 {
 	return col;
 }
 
-unsigned int ProblemData::getRouterRange()
+int ProblemData::getRouterRange()
 {
 	return routerRange;
 }

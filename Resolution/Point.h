@@ -12,6 +12,7 @@ public:
 	int getCoordX();
 	int getCoordY();
 	Object getType();
+	void setType(Object obj);
 	friend std::ostream& operator<<(std::ostream& os, const Point& p);
 protected:
 	int coordX;
