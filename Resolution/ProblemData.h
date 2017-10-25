@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Object.h"
+#include "Point.h"
 #include <vector>
 
 class ProblemData
@@ -10,8 +11,9 @@ public:
 	~ProblemData();
 	void ParseFile(const char* filename);
 	void Resolution();
+	long calculMaxMoney();
 	friend std::ostream& operator<<(std::ostream& os, const ProblemData& data);
-	Object operator()(const unsigned int row, const unsigned int col);
+	Point operator()(const unsigned int row, const unsigned int col);
 protected:
 	unsigned int row;
 	unsigned int col;
@@ -21,6 +23,6 @@ protected:
 	unsigned int maxBudget;
 	unsigned int backboneRow;
 	unsigned int backboneCol;
-	std::vector<std::vector<Object>> map;
+	std::vector<std::vector<Point>> map;
 };
 

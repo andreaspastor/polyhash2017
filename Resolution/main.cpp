@@ -5,6 +5,7 @@
 
 #include "Point.h"
 #include "ProblemData.h"
+#include "Object.h"
 
 using namespace std;
 
@@ -23,8 +24,10 @@ int main(int argc, char *argv[])
 	data.ParseFile("opera.in");
 	cout << data << endl;
 	cout << data(333, 270) << endl;
-	Point ptA(12, 12);
-	Point ptB(5, 5);
+	cout << "Nombres de points à disposition sur la carte : " << data.calculMaxMoney() << endl;
+
+	Point ptA(12, 12, MUR);
+	Point ptB(5, 5, VIDE);
 	cout << "Distance entre les points : " << ptA.distance(ptB) << endl;
 	data.Resolution();
 	return 0;

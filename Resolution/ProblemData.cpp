@@ -49,19 +49,19 @@ void ProblemData::ParseFile(const char * filename)
 	unsigned int currentRow = 0;
 	while (currentRow < row) {
 		getline(file, line);
-		map.push_back(vector<Object>());
+		map.push_back(vector<Point>());
 		for (unsigned int currentCol = 0; currentCol < line.size(); currentCol += 1) {
 			switch (line[currentCol]) {
 			case '#':
-				map[currentRow].push_back(MUR);
+				map[currentRow].push_back(Point(currentRow, currentCol, MUR));
 				break;
 
 			case '.':
-				map[currentRow].push_back(TARGET);
+				map[currentRow].push_back(Point(currentRow, currentCol, TARGET));
 				break;
 
 			case '-':
-				map[currentRow].push_back(VIDE);
+				map[currentRow].push_back(Point(currentRow, currentCol, VIDE));
 				break;
 
 			default:
@@ -71,8 +71,20 @@ void ProblemData::ParseFile(const char * filename)
 		}
 		currentRow += 1;
 	}
+}
 
-	map[backboneRow][backboneCol] = BACKBONE;
+long ProblemData::calculMaxMoney()
+{
+	long somme = 0;
+	for (auto x: map) {
+		for (auto y : x) {
+			if (y.type == TARGET)
+			{
+				somme += 1;
+			}
+		}
+	}
+	return somme * 1000;
 }
 
 ostream& operator<<(ostream& os, const ProblemData& data)
@@ -87,7 +99,7 @@ ostream& operator<<(ostream& os, const ProblemData& data)
 	return os;
 }
 
-Object ProblemData::operator()(const unsigned int row, const unsigned int col)
+Point ProblemData::operator()(const unsigned int row, const unsigned int col)
 {
 	return map.at(row).at(col);
 }
