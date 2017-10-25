@@ -11,6 +11,21 @@ Point::~Point()
 {
 }
 
+int Point::getCoordX()
+{
+	return coordX;
+}
+
+int Point::getCoordY()
+{
+	return coordY;
+}
+
+Object Point::getType()
+{
+	return type;
+}
+
 
 Point::Point(int x, int y, Object object)
 {

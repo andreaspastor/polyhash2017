@@ -2,12 +2,36 @@
 #include <fstream>
 #include <string>
 #include <vector>
+#include <cmath>
 
 #include "Point.h"
 #include "ProblemData.h"
 #include "Object.h"
 
 using namespace std;
+
+bool isCover(ProblemData& data, Point& ptA, Point& ptB);
+//void depotRouter(ProblemData& data);
+
+bool isCover(ProblemData& data, Point& ptA, Point& ptB) 
+{
+	int xmin = fmin(ptA.getCoordX(), ptB.getCoordX());
+	int xmax = fmax(ptA.getCoordX(), ptB.getCoordX());
+	int ymin = fmin(ptA.getCoordY(), ptB.getCoordY());
+	int ymax = fmax(ptA.getCoordY(), ptB.getCoordY());
+	for (int x = xmin; x <= xmax; x++) {
+		for (int y = ymin; y <= ymax; y++) {
+			if (data(x, y).getType() == MUR) {
+				return false;
+			}
+		}
+	}
+	return true;
+}
+
+/*void depotRouter(ProblemData& data) {
+	for (int x = data.getRange(); x < data.getRow(); )
+}*/
 
 void parseArgs(int argc)
 {

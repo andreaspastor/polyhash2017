@@ -103,3 +103,43 @@ Point ProblemData::operator()(const unsigned int row, const unsigned int col)
 {
 	return map.at(row).at(col);
 }
+
+unsigned int ProblemData::getRow()
+{
+	return row;
+}
+
+unsigned int ProblemData::getCol()
+{
+	return col;
+}
+
+unsigned int ProblemData::getRouterRange()
+{
+	return routerRange;
+}
+
+unsigned int ProblemData::getConnectPrice()
+{
+	return connectPrice;
+}
+
+unsigned int ProblemData::getRouterPrice()
+{
+	return routerPrice;
+}
+
+unsigned int ProblemData::getMaxBudget()
+{
+	return maxBudget;
+}
+
+unsigned int ProblemData::getBackboneRow()
+{
+	return backboneRow;
+}
+
+unsigned int ProblemData::getBachboneCol()
+{
+	return backboneCol;
+}
