@@ -15,6 +15,7 @@ public:
 	int getCoordY();
 	Object getType();
 	void setType(Object obj);
+	friend bool operator==(Point const& ptA, Point const& ptB);
 	friend std::ostream& operator<<(std::ostream& os, const Point& p);
 protected:
 	int coordX;

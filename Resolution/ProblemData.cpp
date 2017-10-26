@@ -2,6 +2,7 @@
 #include <fstream>
 #include <iostream>
 #include <string>
+#include <algorithm>
 
 using namespace std;
 
@@ -72,21 +73,33 @@ void ProblemData::ParseFile(const char * filename)
 }
 
 vector<Point> ProblemData::depotRouter() {
-	vector<Point> routeurs;
+	vector<Point> routers;
+
 	for (int x = routerRange; x < row; x += (2 * routerRange + 1)) {
 		for (int y = routerRange; y < col; y += (2 * routerRange + 1)) {
 			if (map[x][y].getType() == TARGET) {
-				routeurs.push_back(Point(x, y, ROUTER));
+				routers.push_back(Point(x, y, ROUTER));
 			}
 		}
 	}
-	cout << routeurs.size() << endl;
-	return routeurs;
+	return routers;
 }
 
-vector<Point> ProblemData::getRepartition()
+vector<Point> ProblemData::getRepartition(vector<Point> & routers, const vector<int> & parent)
 {
-	return vector<Point>();
+	vector<Point> listCables;
+	for (int x = 1; x < parent.size(); x++) {
+		Point routerA = routers[x];
+		Point routerB = routers[parent[x]];
+		vector<Point> linkCables = routerA.getCablesToB(routerB);
+		for (auto cable : linkCables) {
+			if (find(listCables.begin(), listCables.end(), cable) == listCables.end()) {
+				listCables.push_back(cable);
+			}
+		}
+	}
+	cout << listCables.size() << endl;
+	return listCables;
 }
 
 bool ProblemData::isCover(Point& ptA, Point& ptB)
@@ -186,7 +199,7 @@ unsigned int ProblemData::getBackboneRow()
 	return backboneRow;
 }
 
-unsigned int ProblemData::getBachboneCol()
+unsigned int ProblemData::getBackboneCol()
 {
 	return backboneCol;
 }

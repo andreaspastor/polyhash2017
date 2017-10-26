@@ -69,6 +69,14 @@ std::vector<Point> Point::getCablesToB(Point & ptB)
 	return listCables;
 }
 
+bool operator==(Point const & ptA, Point const & ptB)
+{
+	if (ptA.coordX == ptB.coordX && ptA.coordY == ptB.coordY && ptA.type == ptB.type) {
+		return true;
+	}
+	return false;
+}
+
 std::ostream& operator<<(std::ostream& os, const Point& p) {
 	os << "Le point a pour coordonnées (" << p.coordX << ", " << p.coordY << ")" << std::endl;
 	os << "Le type du point est " << p.type << std::endl;

@@ -2,6 +2,7 @@
 
 #include "Object.h"
 #include "Point.h"
+#include "Graph.h"
 #include <vector>
 
 using namespace std;
@@ -13,7 +14,7 @@ public:
 	~ProblemData();
 	void ParseFile(const char* filename);
 	vector<Point> depotRouter();
-	vector<Point> getRepartition();
+	vector<Point> getRepartition(vector<Point>& routers, const vector<int> & parent);
 	bool isCover(Point & ptA, Point & ptB);
 	long scoreRouters(const vector<Point>& routers);
 	long calculMaxMoney();
@@ -27,7 +28,7 @@ public:
 	unsigned int getRouterPrice();
 	unsigned int getMaxBudget();
 	unsigned int getBackboneRow();
-	unsigned int getBachboneCol();
+	unsigned int getBackboneCol();
 protected:
 	int row;
 	int col;

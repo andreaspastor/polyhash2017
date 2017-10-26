@@ -11,15 +11,15 @@ class Graph
 public:
 	Graph();
 	~Graph();
-	Graph(const vector<Point>& routers);
+	Graph(const Point & backbone, const vector<Point>& routers);
 	void resolve();
 	int minDist(const vector<int>& dist, const vector<bool>& isConnected);
 	void printSolution(const vector<int>& parent);
 	long getWeight();
 	int getSize();
+	vector<int> parent;
 protected:
 	vector<vector<int>> graph;
-	vector<int> parent;
 	long weight;
 	int size;
 };

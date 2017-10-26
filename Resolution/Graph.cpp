@@ -13,7 +13,7 @@ Graph::~Graph()
 {
 }
 
-Graph::Graph(const vector<Point>& routers)
+Graph::Graph(const Point & backbone, const vector<Point>& routers)
 {
 	int x = 0;
 	size = routers.size();
@@ -35,8 +35,8 @@ int Graph::minDist(const vector<int>& dist, const vector<bool>& isConnected)
 			minDist = dist[x];
 			minDist_index = x;
 		}
-		weight += minDist;
 	}
+	weight += minDist;
 	return minDist_index;
 }
 
@@ -64,7 +64,8 @@ void Graph::resolve() {
 			}
 		}
 	}
-	printSolution(parent);
+	//printSolution(parent);
+	cout << weight << endl;
 }
 
 long Graph::getWeight()
