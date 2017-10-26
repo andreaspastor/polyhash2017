@@ -52,11 +52,16 @@ int main(int argc, char *argv[])
 	cout << "Score recuperer pour avoir convert des cellules : " << scoreCellsCovered << endl;
 
 	dump("coordRouters.txt", routers);
-
+	Point ptA = Point(0, 1, TARGET);
+	Point ptB = Point(5, -10, TARGET);
+	vector<Point> liste = ptA.getCablesToB(ptB);
+	for (int f = 0; f < liste.size(); f++) {
+		cout << liste[f].getCoordX() << " - " << liste[f].getCoordY() << endl;
+	}
 	routers.push_back(Point(data.getBackboneRow(), data.getBachboneCol(), CABLE));
 	Graph cables = Graph(routers);
 	cables.resolve();
 	
-	vector<Point> listCables = cables.getRepartition(data);
+	vector<Point> listCables = data.getRepartition();
 	return 0;
 }

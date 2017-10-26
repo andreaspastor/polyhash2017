@@ -84,6 +84,11 @@ vector<Point> ProblemData::depotRouter() {
 	return routeurs;
 }
 
+vector<Point> ProblemData::getRepartition()
+{
+	return vector<Point>();
+}
+
 bool ProblemData::isCover(Point& ptA, Point& ptB)
 {
 	int xmin = fmin(ptA.getCoordX(), ptB.getCoordX());

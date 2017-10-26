@@ -13,6 +13,7 @@ public:
 	~ProblemData();
 	void ParseFile(const char* filename);
 	vector<Point> depotRouter();
+	vector<Point> getRepartition();
 	bool isCover(Point & ptA, Point & ptB);
 	long scoreRouters(const vector<Point>& routers);
 	long calculMaxMoney();

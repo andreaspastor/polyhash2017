@@ -38,10 +38,35 @@ Point::Point(int x, int y, Object object)
 	type = object;
 }
 
-unsigned int Point::distance(const Point &ptB) {
+unsigned int Point::distance(const Point &ptB) 
+{
 	int x = std::abs(coordX - ptB.coordX);
 	int y = std::abs(coordY - ptB.coordY);
 	return std::fmin(x, y) + std::abs(x - y);
+}
+
+std::vector<Point> Point::getCablesToB(Point & ptB)
+{
+	std::vector<Point> listCables;
+	int deltaX = std::abs(coordX - ptB.coordX);
+	int deltaY = std::abs(coordY - ptB.coordY);
+	int nbOblique = std::fmin(deltaX, deltaY);
+	int nbVertical = std::abs(deltaX - deltaY);
+
+	int signX = ((coordX - ptB.coordX) < 0) ? 1 : -1;
+	int signY = ((coordY - ptB.coordY) < 0) ? 1 : -1;
+
+	//ajout des cables obliques
+	for (int i = 1; i <= nbOblique; i++) {
+		listCables.push_back(Point(coordX + signX * i, coordY + signY * i, CABLE));
+	}
+	
+	int axeX = ((deltaX - deltaY) > 0) ? 1 : 0;
+	int axeY = (axeX == 1) ? 0 : 1;
+	for (int j = nbVertical - 1; j >= 0; j--) {
+		listCables.push_back(Point(ptB.coordX - j * signX * axeX, ptB.coordY - j * signY * axeY, CABLE));
+	}
+	return listCables;
 }
 
 std::ostream& operator<<(std::ostream& os, const Point& p) {
