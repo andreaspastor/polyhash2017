@@ -7,6 +7,7 @@
 #include "Point.h"
 #include "ProblemData.h"
 #include "Object.h"
+#include "Graph.h"
 
 using namespace std;
 
@@ -40,7 +41,7 @@ int main(int argc, char *argv[])
 {
 	//parseArgs(argc);
 	ProblemData data;
-	data.ParseFile("lets_go_higher.in");
+	data.ParseFile("opera.in");
 	cout << data(0, 0) << endl;
 	cout << "Nombres de points à disposition sur la carte : " << data.calculMaxMoney() << endl;
 
@@ -52,9 +53,12 @@ int main(int argc, char *argv[])
 
 	dump("coordRouters.txt", routers);
 
+	routers.push_back(Point(data.getBackboneRow(), data.getBachboneCol(), CABLE));
+	Graph cables = Graph(routers);
+	cables.resolve();
+
 	Point ptA(12, 12, MUR);
 	Point ptB(5, 5, VIDE);
 	cout << "Distance entre les points : " << ptA.distance(ptB) << endl;
-	data.Resolution();
 	return 0;
 }

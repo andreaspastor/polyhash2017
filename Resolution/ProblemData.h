@@ -15,7 +15,6 @@ public:
 	vector<Point> depotRouter();
 	bool isCover(Point & ptA, Point & ptB);
 	long scoreRouters(const vector<Point>& routers);
-	void Resolution();
 	long calculMaxMoney();
 	friend ostream& operator<<(ostream& os, const ProblemData& data);
 	Point operator()(const unsigned int row, const unsigned int col);
