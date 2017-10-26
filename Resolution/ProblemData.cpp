@@ -72,6 +72,36 @@ void ProblemData::ParseFile(const char * filename)
 	cout << map[0][0] << endl;
 }
 
+void ProblemData::dumpInFile(const char * filename, vector<Point>& routers, const vector<Point>& listeCables)
+{
+	ofstream monFlux(filename);
+	
+	if (monFlux) {
+		monFlux << listeCables.size() << endl;
+		for (auto pt : listeCables) {
+			monFlux << pt.getCoordX() << " " << pt.getCoordY() << endl;
+		}
+		// -1 car le premier point dans la liste est le backbone
+		monFlux << routers.size() - 1 << endl;
+		for (int x = 0; x < routers.size(); x++) {
+			monFlux << routers[x].getCoordX() << " " << routers[x].getCoordY() << endl;
+		}
+	}
+}
+
+void dump(const char* filename, vector<Point> routers) {
+	ofstream monFlux(filename);
+
+	if (monFlux) {
+		for (auto router : routers) {
+			monFlux << router.getCoordX() << " " << router.getCoordY() << endl;
+		}
+	}
+	else {
+		cout << "ERREUR: Impossible d'ouvrir le fichier." << endl;
+	}
+}
+
 vector<Point> ProblemData::depotRouter() {
 	vector<Point> routers;
 	//ajout du backbone car besoin dans le graphe couvrant

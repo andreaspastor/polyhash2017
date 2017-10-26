@@ -11,23 +11,6 @@
 
 using namespace std;
 
-void dump(const char* filename, vector<Point> routers);
-
-void dump(const char* filename, vector<Point> routers) {
-	ofstream monFlux(filename);
-
-	if (monFlux) {
-		for (auto router : routers) {
-			monFlux << router.getCoordX() << " " << router.getCoordY() << endl;
-		}
-	}
-	else {
-		cout << "ERREUR: Impossible d'ouvrir le fichier." << endl;
-	}
-}
-
-
-
 
 void parseArgs(int argc)
 {
@@ -41,6 +24,7 @@ int main(int argc, char *argv[])
 {
 	//parseArgs(argc);
 	ProblemData data;
+	const char* filename("opera.in");
 	data.ParseFile("opera.in");
 	cout << data(0, 0) << endl;
 	cout << "Nombres de points à disposition sur la carte : " << data.calculMaxMoney() << endl;
@@ -51,7 +35,7 @@ int main(int argc, char *argv[])
 	cout << "On a depose " << routers.size() << " routeurs sur la carte." << endl;
 	cout << "Score recuperer pour avoir convert des cellules : " << scoreCellsCovered << endl;
 
-	dump("coordRouters.txt", routers);
+	
 	/*Point ptA = Point(0, 1, TARGET);
 	Point ptB = Point(5, -10, TARGET);
 	vector<Point> liste = ptA.getCablesToB(ptB);
@@ -63,5 +47,6 @@ int main(int argc, char *argv[])
 	cables.resolve();
 	
 	vector<Point> listCables = data.getRepartition(routers, cables.parent);
+	data.dumpInFile("coord.txt", routers, listCables);
 	return 0;
 }

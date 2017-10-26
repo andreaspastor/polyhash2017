@@ -13,6 +13,7 @@ public:
 	ProblemData();
 	~ProblemData();
 	void ParseFile(const char* filename);
+	void dumpInFile(const char* filename, vector<Point> & routers, const vector<Point> & listeCables);
 	vector<Point> depotRouter();
 	vector<Point> getRepartition(vector<Point>& routers, const vector<int> & parent);
 	bool isCover(Point & ptA, Point & ptB);
