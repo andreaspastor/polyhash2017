@@ -10,6 +10,7 @@ public:
 	Point(int x, int y, Object object);
 	unsigned int distance(const Point &B);
 	std::vector<Point> getCablesToB(Point & ptB);
+	bool voisinDe(const Point & ptB);
 	~Point();
 	int getCoordX();
 	int getCoordY();

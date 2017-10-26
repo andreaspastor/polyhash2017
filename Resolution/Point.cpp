@@ -69,6 +69,19 @@ std::vector<Point> Point::getCablesToB(Point & ptB)
 	return listCables;
 }
 
+bool Point::voisinDe(const Point & ptB)
+{
+	int deltaX = std::abs(ptB.coordX - coordX);
+	int deltaY = std::abs(ptB.coordY - coordY);
+	if (deltaX > 1 || deltaY > 1) {
+		return false;
+	}
+	if (deltaX == 0 && deltaY == 0) {
+		return false;
+	}
+	return true;
+}
+
 bool operator==(Point const & ptA, Point const & ptB)
 {
 	if (ptA.coordX == ptB.coordX && ptA.coordY == ptB.coordY && ptA.type == ptB.type) {

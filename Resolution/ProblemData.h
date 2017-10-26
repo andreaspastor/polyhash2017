@@ -41,3 +41,4 @@ protected:
 	vector<vector<Point>> map;
 };
 
+void sorting(const vector<Point> & listeRef, vector<Point> & liste, const Point & ptCentre);

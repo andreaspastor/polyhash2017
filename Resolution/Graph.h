@@ -11,7 +11,7 @@ class Graph
 public:
 	Graph();
 	~Graph();
-	Graph(const Point & backbone, const vector<Point>& routers);
+	Graph(const vector<Point>& routers);
 	void resolve();
 	int minDist(const vector<int>& dist, const vector<bool>& isConnected);
 	void printSolution(const vector<int>& parent);

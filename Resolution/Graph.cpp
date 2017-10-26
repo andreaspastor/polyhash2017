@@ -13,7 +13,7 @@ Graph::~Graph()
 {
 }
 
-Graph::Graph(const Point & backbone, const vector<Point>& routers)
+Graph::Graph(const vector<Point>& routers)
 {
 	int x = 0;
 	size = routers.size();

@@ -74,6 +74,8 @@ void ProblemData::ParseFile(const char * filename)
 
 vector<Point> ProblemData::depotRouter() {
 	vector<Point> routers;
+	//ajout du backbone car besoin dans le graphe couvrant
+	routers.push_back(Point(backboneRow, backboneCol, CABLE));
 
 	for (int x = routerRange; x < row; x += (2 * routerRange + 1)) {
 		for (int y = routerRange; y < col; y += (2 * routerRange + 1)) {
@@ -88,6 +90,8 @@ vector<Point> ProblemData::depotRouter() {
 vector<Point> ProblemData::getRepartition(vector<Point> & routers, const vector<int> & parent)
 {
 	vector<Point> listCables;
+	Point backbone(backboneRow, backboneCol, CABLE);
+
 	for (int x = 1; x < parent.size(); x++) {
 		Point routerA = routers[x];
 		Point routerB = routers[parent[x]];
@@ -98,8 +102,23 @@ vector<Point> ProblemData::getRepartition(vector<Point> & routers, const vector<
 			}
 		}
 	}
+
 	cout << listCables.size() << endl;
-	return listCables;
+	vector<Point> listCablesSorted;
+	
+	sorting(listCables, listCablesSorted, backbone);
+	return listCablesSorted;
+}
+
+void sorting(const vector<Point> & listeRef, vector<Point> & liste, const Point & ptCentre) 
+{
+	for (auto pt : listeRef) {
+		if (pt.voisinDe(ptCentre) && find(liste.begin(), liste.end(), pt) == liste.end()) {
+			liste.push_back(pt);
+			sorting(listeRef, liste, pt);
+		}
+
+	}
 }
 
 bool ProblemData::isCover(Point& ptA, Point& ptB)

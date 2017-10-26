@@ -59,8 +59,7 @@ int main(int argc, char *argv[])
 		cout << liste[f].getCoordX() << " - " << liste[f].getCoordY() << endl;
 	}*/
 	
-	Point backbone(data.getBackboneRow(), data.getBackboneCol(), CABLE);
-	Graph cables = Graph(backbone, routers);
+	Graph cables = Graph(routers);
 	cables.resolve();
 	
 	vector<Point> listCables = data.getRepartition(routers, cables.parent);
