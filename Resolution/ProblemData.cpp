@@ -14,11 +14,6 @@ ProblemData::~ProblemData()
 {
 }
 
-void ProblemData::Resolution()
-{
-	
-}
-
 void ProblemData::ParseFile(const char * filename)
 {
 	ifstream file(filename);
@@ -45,34 +40,93 @@ void ProblemData::ParseFile(const char * filename)
 	file >> line;
 	backboneCol = stoi(line);
 
+	file.ignore();
 	
 	unsigned int currentRow = 0;
 	while (currentRow < row) {
 		getline(file, line);
-		map.push_back(vector<Object>());
-		for (unsigned int currentCol = 0; currentCol < line.size(); currentCol += 1) {
+		map.push_back(vector<Point>());
+		for (unsigned int currentCol = 0; currentCol < line.size(); currentCol ++) {
 			switch (line[currentCol]) {
 			case '#':
-				map[currentRow].push_back(MUR);
+				map[currentRow].push_back(Point(currentRow, currentCol, MUR));
 				break;
 
 			case '.':
-				map[currentRow].push_back(TARGET);
+				map[currentRow].push_back(Point(currentRow, currentCol, TARGET));
 				break;
 
 			case '-':
-				map[currentRow].push_back(VIDE);
+				map[currentRow].push_back(Point(currentRow, currentCol, VIDE));
 				break;
 
 			default:
 				cerr << "Une erreur s'est produite lors du parsing !" << endl;
+				exit(-1);
 				break;
 			}
 		}
 		currentRow += 1;
 	}
+	cout << map[0][0] << endl;
+}
 
-	map[backboneRow][backboneCol] = BACKBONE;
+vector<Point> ProblemData::depotRouter() {
+	vector<Point> routeurs;
+	for (int x = routerRange; x < row; x += (2 * routerRange + 1)) {
+		for (int y = routerRange; y < col; y += (2 * routerRange + 1)) {
+			if (map[x][y].getType() == TARGET) {
+				routeurs.push_back(Point(x, y, ROUTER));
+			}
+		}
+	}
+	cout << routeurs.size() << endl;
+	return routeurs;
+}
+
+bool ProblemData::isCover(Point& ptA, Point& ptB)
+{
+	int xmin = fmin(ptA.getCoordX(), ptB.getCoordX());
+	int xmax = fmax(ptA.getCoordX(), ptB.getCoordX());
+	int ymin = fmin(ptA.getCoordY(), ptB.getCoordY());
+	int ymax = fmax(ptA.getCoordY(), ptB.getCoordY());
+	for (int x = xmin; x <= xmax; x++) {
+		for (int y = ymin; y <= ymax; y++) {
+			if (map[x][y].getType() == MUR) {
+				return false;
+			}
+		}
+	}
+	return true;
+}
+
+long ProblemData::scoreRouters(const vector<Point>& routers) {
+	long score = 0;
+	for (auto router : routers) {
+		for (int x = -routerRange; x <= routerRange; x++) {
+			for (int y = -routerRange; y <= routerRange; y++) {
+				if (map[router.getCoordX() + x] [router.getCoordY() + y].getType() != COVERED && isCover(router, map[router.getCoordX() + x][router.getCoordY() + y])) {
+					score += 1000;
+					map[router.getCoordX() + x][router.getCoordY() + y].setType(COVERED);//Besoin de dire COVERED pour eviter de compter 2 fois la meme cellule
+				}
+			}
+		}
+	}
+	return score;
+}
+
+long ProblemData::calculMaxMoney()
+{
+	long somme = 0;
+	for (auto x: map) {
+		for (auto y : x) {
+			if (y.getType() == TARGET)
+			{
+				somme += 1;
+			}
+		}
+	}
+	return somme * 1000;
 }
 
 ostream& operator<<(ostream& os, const ProblemData& data)
@@ -87,7 +141,47 @@ ostream& operator<<(ostream& os, const ProblemData& data)
 	return os;
 }
 
-Object ProblemData::operator()(const unsigned int row, const unsigned int col)
+Point ProblemData::operator()(const unsigned int row, const unsigned int col)
 {
-	return map.at(row).at(col);
+	return map[row][col];
+}
+
+int ProblemData::getRow()
+{
+	return row;
+}
+
+int ProblemData::getCol()
+{
+	return col;
+}
+
+int ProblemData::getRouterRange()
+{
+	return routerRange;
+}
+
+unsigned int ProblemData::getConnectPrice()
+{
+	return connectPrice;
+}
+
+unsigned int ProblemData::getRouterPrice()
+{
+	return routerPrice;
+}
+
+unsigned int ProblemData::getMaxBudget()
+{
+	return maxBudget;
+}
+
+unsigned int ProblemData::getBackboneRow()
+{
+	return backboneRow;
+}
+
+unsigned int ProblemData::getBachboneCol()
+{
+	return backboneCol;
 }
