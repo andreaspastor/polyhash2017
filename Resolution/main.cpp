@@ -56,9 +56,7 @@ int main(int argc, char *argv[])
 	routers.push_back(Point(data.getBackboneRow(), data.getBachboneCol(), CABLE));
 	Graph cables = Graph(routers);
 	cables.resolve();
-
-	Point ptA(12, 12, MUR);
-	Point ptB(5, 5, VIDE);
-	cout << "Distance entre les points : " << ptA.distance(ptB) << endl;
+	
+	vector<Point> listCables = cables.getRepartition(data);
 	return 0;
 }

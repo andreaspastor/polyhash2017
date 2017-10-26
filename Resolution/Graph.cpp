@@ -47,11 +47,24 @@ void Graph::printSolution(const vector<int>& parent)
 	}
 }
 
+vector<Point> Graph::getCablesAToB(const int& fils, const int& parent) {
+
+}
+
+vector<Point> Graph::getRepartition(const ProblemData & data)
+{
+	vector<Point> listCables;
+	for (int x = 0; x < size; x++) {
+		vector<Point> cablesAtoB = getCablesAToB(x, parent[x]);
+	}
+	return listCables;
+}
+
 void Graph::resolve() {
 	vector<int> dist(size, INT_MAX);
-	vector<int> parent(size);
 	vector<bool> isConnected(size, false);
 	dist[0] = 0;
+	parent.resize(size);
 	parent[0] = -1;
 
 	for (int h = 0; h < size; h++) {
