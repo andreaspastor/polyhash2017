@@ -14,6 +14,8 @@ int main()
 	cout << "Parse answer OK" << endl;
 
 	cout << "Budget respected ? " << parser.isBudgetRespected() << endl;
+	
+	cout << "Are routers in walls ? " << parser.areRoutersInWalls() << endl;
 
 	system("Pause");
 

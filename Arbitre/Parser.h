@@ -17,6 +17,8 @@ public:
 	bool areRoutersInWalls();
 	bool isBudgetRespected();
 
+	int calculeScore();
+
 	int getRow();
 	int getCol();
 	int getRouterRange();//besoin que le fonction retourne int pour la fonction scoreRouters
@@ -39,6 +41,8 @@ protected:
 	vector<Point> cells;
 	int numberOfRouters;
 	vector<Point> routers;
+	int numberOfTargetCells;
+	int budgetCalculated;
 	
 	vector<vector<Point>> map;
 };
