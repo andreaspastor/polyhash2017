@@ -1,9 +1,12 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26730.16
+VisualStudioVersion = 15.0.27004.2005
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Resolution", "Resolution\Resolution.vcxproj", "{C7C20FED-9B6A-42AF-9EC7-F93DDAE28B7E}"
+	ProjectSection(ProjectDependencies) = postProject
+		{E6668645-C678-4B05-B296-36CF8911F290} = {E6668645-C678-4B05-B296-36CF8911F290}
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Arbitre", "Arbitre\Arbitre.vcxproj", "{E6668645-C678-4B05-B296-36CF8911F290}"
 EndProject

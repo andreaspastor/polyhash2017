@@ -156,6 +156,7 @@ int Parser::calculeScore() {
 	return 0;
 }
 
+
 Point Parser::operator()(const unsigned int row, const unsigned int col)
 {
 	return map[row][col];
