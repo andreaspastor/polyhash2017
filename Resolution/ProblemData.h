@@ -5,6 +5,9 @@
 #include "Graph.h"
 #include <vector>
 
+//Décommenter  la ligne pour avoir les affichages
+//#define DEBUG
+
 using namespace std;
 
 class ProblemData

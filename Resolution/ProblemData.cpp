@@ -69,7 +69,9 @@ void ProblemData::ParseFile(const char * filename)
 		}
 		currentRow += 1;
 	}
+#ifdef DEBUG
 	cout << map[0][0] << endl;
+#endif
 }
 
 void ProblemData::dumpInFile(const char * filename, vector<Point>& routers, const vector<Point>& listeCables)
@@ -132,8 +134,10 @@ vector<Point> ProblemData::getRepartition(vector<Point> & routers, const vector<
 			}
 		}
 	}
-
+#ifdef DEBUG
 	cout << listCables.size() << endl;
+#endif 
+
 	vector<Point> listCablesSorted;
 	
 	sorting(listCables, listCablesSorted, backbone);

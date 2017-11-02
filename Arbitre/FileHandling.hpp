@@ -54,8 +54,7 @@ void IterateOnFileDir(const char *baseDir, const char *resultName, F &func)
 		std::string extension = fileName.substr(fileName.length() - 4, fileName.length());
 
 		if (extension == ".exe")
-			cout << baseDir << " et " << file << " et " << fileName << endl;
-			func(file, resultName);
+			func(fileName, baseDir, resultName);
 		++i;
 	}
 }

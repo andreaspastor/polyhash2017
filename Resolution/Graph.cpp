@@ -64,8 +64,10 @@ void Graph::resolve() {
 			}
 		}
 	}
+#ifdef DEBUG
 	//printSolution(parent);
 	cout << weight << endl;
+#endif;
 }
 
 long Graph::getWeight()
