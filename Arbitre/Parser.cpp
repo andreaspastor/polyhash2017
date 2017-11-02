@@ -70,7 +70,7 @@ void Parser::ParseRule(const char* filename) {
 		}
 		currentRow += 1;
 	}
-	cout << map[0][0] << endl;
+	//cout << map[0][0] << endl;
 }
 
 //Parse the answer file
@@ -80,9 +80,9 @@ void Parser::ParseAnswer(const char* filename) {
 		cerr << "This file doesn't exist !" << endl;
 		exit(-1);
 	}
-
+#ifdef DEBUG
 	cout << "Opening file anwser" << endl;
-
+#endif
 	string line;
 	//First line is the number of cells connected
 	file >> line;
@@ -148,7 +148,9 @@ bool Parser::areRoutersInWalls() {
 //Return bool (0 if not respected)
 bool Parser::isBudgetRespected() {
 	budgetCalculated = numberOfCellsConnected * connectPrice + numberOfRouters * routerPrice;
+#ifdef DEBUG
 	cout << "Budget max: " << maxBudget << " | " << "Calculated budget: " << budgetCalculated << endl;
+#endif
 	return budgetCalculated <= maxBudget;
 }
 

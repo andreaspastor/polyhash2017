@@ -41,6 +41,8 @@ int main(int argc, char *argv[])
 	ProblemData data;
 	const char* filename(input);
 	data.ParseFile(filename);
+
+	//Pour pas pourrir les performances vis à vis de l'arbitre
 #ifdef DEBUG
 	cout << data(0, 0) << endl;
 	cout << "Nombres de points à disposition sur la carte : " << data.calculMaxMoney() << endl;

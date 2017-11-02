@@ -3,7 +3,8 @@
 #include "../Resolution/Point.h"
 #include <vector>
 
-using namespace std;
+//Décommenter pour tester
+//#define DEBUG
 
 class Parser {
 public:
@@ -38,11 +39,11 @@ protected:
 	unsigned int backboneCol;
 
 	int numberOfCellsConnected;
-	vector<Point> cells;
+	std::vector<Point> cells;
 	int numberOfRouters;
-	vector<Point> routers;
+	std::vector<Point> routers;
 	int numberOfTargetCells;
 	int budgetCalculated;
 	
-	vector<vector<Point>> map;
+	std::vector<std::vector<Point>> map;
 };
