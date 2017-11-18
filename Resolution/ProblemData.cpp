@@ -3,8 +3,8 @@
 #include <iostream>
 #include <string>
 #include <algorithm>
+#include <cmath>
 
-using namespace std;
 
 ProblemData::ProblemData()
 {
@@ -17,36 +17,36 @@ ProblemData::~ProblemData()
 
 void ProblemData::ParseFile(const char * filename)
 {
-	ifstream file(filename);
+	std::ifstream file(filename);
 	if (!file) {
-		cerr << "Ce fichier n'existe pas !" << endl;
+		std::cerr << "Ce fichier n'existe pas !" << std::endl;
 		exit(-1);
 	}
 
-	string line;
+	std::string line;
 	file >> line;
-	row = stoi(line);
+	row = std::stoi(line);
 	file >> line;
-	col = stoi(line);
+	col = std::stoi(line);
 	file >> line;
-	routerRange = stoi(line);
+	routerRange = std::stoi(line);
 	file >> line;
-	connectPrice = stoi(line);
+	connectPrice = std::stoi(line);
 	file >> line;
-	routerPrice = stoi(line);
+	routerPrice = std::stoi(line);
 	file >> line;
-	maxBudget = stoi(line);
+	maxBudget = std::stoi(line);
 	file >> line;
-	backboneRow = stoi(line);
+	backboneRow = std::stoi(line);
 	file >> line;
-	backboneCol = stoi(line);
+	backboneCol = std::stoi(line);
 
 	file.ignore();
 	
 	unsigned int currentRow = 0;
 	while (currentRow < row) {
-		getline(file, line);
-		map.push_back(vector<Point>());
+		std::getline(file, line);
+		map.push_back(std::vector<Point>());
 		for (unsigned int currentCol = 0; currentCol < line.size(); currentCol ++) {
 			switch (line[currentCol]) {
 			case '#':
@@ -62,49 +62,49 @@ void ProblemData::ParseFile(const char * filename)
 				break;
 
 			default:
-				cerr << "Une erreur s'est produite lors du parsing !" << endl;
-				exit(-1);
+				std::cerr << "Une erreur s'est produite lors du parsing !" << std::endl;
+				std::exit(-1);
 				break;
 			}
 		}
 		currentRow += 1;
 	}
 #ifdef DEBUG
-	cout << map[0][0] << endl;
+	std::cout << map[0][0] << std::endl;
 #endif
 }
 
-void ProblemData::dumpInFile(const char * filename, vector<Point>& routers, const vector<Point>& listeCables)
+void ProblemData::dumpInFile(const char * filename)
 {
-	ofstream monFlux(filename);
+	std::ofstream monFlux(filename);
 	
 	if (monFlux) {
-		monFlux << listeCables.size() << endl;
-		for (auto pt : listeCables) {
-			monFlux << pt.getCoordX() << " " << pt.getCoordY() << endl;
+		monFlux << cables.size() << std::endl;
+		for (auto pt : cables) {
+			monFlux << pt.getCoordX() << " " << pt.getCoordY() << std::endl;
 		}
 		// -1 car le premier point dans la liste est le backbone
-		monFlux << routers.size() - 1 << endl;
+		monFlux << routers.size() - 1 << std::endl;
 		for (int x = 0; x < routers.size(); x++) {
-			monFlux << routers[x].getCoordX() << " " << routers[x].getCoordY() << endl;
+			monFlux << routers[x].getCoordX() << " " << routers[x].getCoordY() << std::endl;
 		}
 	}
 }
 
-void dump(const char* filename, vector<Point> routers) {
-	ofstream monFlux(filename);
+void dump(const char* filename, std::vector<Point> routers) {
+	std::ofstream monFlux(filename);
 
 	if (monFlux) {
 		for (auto router : routers) {
-			monFlux << router.getCoordX() << " " << router.getCoordY() << endl;
+			monFlux << router.getCoordX() << " " << router.getCoordY() << std::endl;
 		}
 	}
 	else {
-		cout << "ERREUR: Impossible d'ouvrir le fichier." << endl;
+		std::cout << "ERREUR: Impossible d'ouvrir le fichier." << std::endl;
 	}
 }
-
-vector<Point> ProblemData::depotRouter() {
+//Premier solution de dépot de routers
+/*vector<Point> ProblemData::depotRouter() {
 	vector<Point> routers;
 	//ajout du backbone car besoin dans le graphe couvrant
 	routers.push_back(Point(backboneRow, backboneCol, CABLE));
@@ -117,20 +117,115 @@ vector<Point> ProblemData::depotRouter() {
 		}
 	}
 	return routers;
+}*/
+
+int ProblemData::potentielWifi(const int & x , const int & y) {
+	int score = 0;
+	for (int i = -routerRange; i <= routerRange; i += 4) {
+		for (int j = -routerRange; j <= routerRange; j += 4) {
+			if (map[x + i][y + j].getType() != COVERED && isCover(x, y, x + i, y + j)) {
+				score += 1000;
+			}
+		}
+	}
+	return score;
 }
 
-vector<Point> ProblemData::getRepartition(vector<Point> & routers, const vector<int> & parent)
+int ProblemData::distance(const int & x, const int & y) {
+	int xx, yy, dist;
+	int minDist = 9999;
+	for (auto cable : cables) {
+		xx = std::abs(x - cable.getCoordX());
+		yy = std::abs(y - cable.getCoordY());
+		dist = std::fmin(xx, yy) + std::abs(xx - yy);
+		if (dist < minDist) {
+			minDist = dist;
+		}
+	}
+	return minDist;
+}
+
+void ProblemData::depotRouter() {
+	//ajout du backbone car besoin dans le graphe couvrant
+	routers.push_back(Point(backboneRow, backboneCol, CABLE));
+	cables.push_back(Point(backboneRow, backboneCol, CABLE)); //pour le parcours de la mesure de distance au depot du premier router
+
+	Point maxPotentiel;
+	Point plusProcheCable;
+	int potentielValue = 1;
+	int distanceToCable;
+	int value = 0;
+
+	while (maxBudget > 0) {
+
+		//Remise à zero des valeurs
+		maxPotentiel = Point(0, 0, ROUTER);
+		plusProcheCable = Point(backboneRow, backboneCol, CABLE);
+		potentielValue = 0;//peut etre initialiser à la valeur du coût d'un routeur
+		distanceToCable = maxPotentiel.distance(plusProcheCable);
+
+		for (int x = routerRange; x < row - routerRange; x += 5) {
+			for (int y = routerRange; y < col - routerRange; y += 5) {
+				value = potentielWifi(x, y) - distance(x, y);
+				if (value > potentielValue) {
+					maxPotentiel = Point(x, y, ROUTER);
+					potentielValue = value;
+				}
+			}
+		}
+		//Ajout du router
+		if (potentielValue == 0) {
+			//Si l'on a pas reussi à trouver des points qui doivent prendre du wifi
+			break;
+		}
+		routers.push_back(maxPotentiel);
+		maxBudget -= routerPrice;
+		
+		//Modification de la map
+		for (int x = -routerRange; x <= routerRange; x++) {
+			for (int y = -routerRange; y <= routerRange; y++) {
+				if (isCover(maxPotentiel.getCoordX(), maxPotentiel.getCoordY(), maxPotentiel.getCoordX() + x, maxPotentiel.getCoordY() + y)) {
+					map[maxPotentiel.getCoordX() + x][maxPotentiel.getCoordY() + y].setType(COVERED);
+				}
+			}
+		}
+		std::cout << "Ajout de routeur no " << getNbRouters() << " : " << potentielValue << std::endl;
+		//Ajout des cables
+		plusProcheCable = maxPotentiel.closestCable(cables);
+		std::vector<Point> linkCables = maxPotentiel.getCablesToB(plusProcheCable);
+		maxBudget -= linkCables.size() * connectPrice;
+		for (auto cable : linkCables) {
+			if (find(cables.begin(), cables.end(), cable) == cables.end()) {
+				cables.push_back(cable);
+			}
+		}
+		std::cout << "Nombre de cables : " << getNbCables() << std::endl;
+		std::cout << "Budget restant de " << maxBudget << " euros." << std::endl;
+	}
+	
+
+
+
+	/*for (int x = routerRange; x < row; x += (2 * routerRange + 1)) {
+		for (int y = routerRange; y < col; y += (2 * routerRange + 1)) {
+			if (map[x][y].getType() == TARGET) {
+				routers.push_back(Point(x, y, ROUTER));
+			}
+		}
+	}*/
+}
+
+std::vector<Point> ProblemData::getRepartition(const std::vector<int> & parent)
 {
-	vector<Point> listCables;
 	Point backbone(backboneRow, backboneCol, CABLE);
 
 	for (int x = 1; x < parent.size(); x++) {
 		Point routerA = routers[x];
 		Point routerB = routers[parent[x]];
-		vector<Point> linkCables = routerA.getCablesToB(routerB);
+		std::vector<Point> linkCables = routerA.getCablesToB(routerB);
 		for (auto cable : linkCables) {
-			if (find(listCables.begin(), listCables.end(), cable) == listCables.end()) {
-				listCables.push_back(cable);
+			if (find(cables.begin(), cables.end(), cable) == cables.end()) {
+				cables.push_back(cable);
 			}
 		}
 	}
@@ -138,13 +233,13 @@ vector<Point> ProblemData::getRepartition(vector<Point> & routers, const vector<
 	cout << listCables.size() << endl;
 #endif 
 
-	vector<Point> listCablesSorted;
+	std::vector<Point> listCablesSorted;
 	
-	sorting(listCables, listCablesSorted, backbone);
+	sorting(cables, listCablesSorted, backbone);
 	return listCablesSorted;
 }
 
-void sorting(const vector<Point> & listeRef, vector<Point> & liste, const Point & ptCentre) 
+void sorting(const std::vector<Point> & listeRef, std::vector<Point> & liste, const Point & ptCentre) 
 {
 	for (auto pt : listeRef) {
 		if (pt.voisinDe(ptCentre) && find(liste.begin(), liste.end(), pt) == liste.end()) {
@@ -155,12 +250,12 @@ void sorting(const vector<Point> & listeRef, vector<Point> & liste, const Point 
 	}
 }
 
-bool ProblemData::isCover(Point& ptA, Point& ptB)
+bool ProblemData::isCover(const Point& ptA, const Point& ptB)
 {
-	int xmin = fmin(ptA.getCoordX(), ptB.getCoordX());
-	int xmax = fmax(ptA.getCoordX(), ptB.getCoordX());
-	int ymin = fmin(ptA.getCoordY(), ptB.getCoordY());
-	int ymax = fmax(ptA.getCoordY(), ptB.getCoordY());
+	int xmin = std::fmin(ptA.getCoordX(), ptB.getCoordX());
+	int xmax = std::fmax(ptA.getCoordX(), ptB.getCoordX());
+	int ymin = std::fmin(ptA.getCoordY(), ptB.getCoordY());
+	int ymax = std::fmax(ptA.getCoordY(), ptB.getCoordY());
 	for (int x = xmin; x <= xmax; x++) {
 		for (int y = ymin; y <= ymax; y++) {
 			if (map[x][y].getType() == MUR) {
@@ -171,7 +266,23 @@ bool ProblemData::isCover(Point& ptA, Point& ptB)
 	return true;
 }
 
-long ProblemData::scoreRouters(const vector<Point>& routers) {
+bool ProblemData::isCover(const int & ptAx, const int & ptAy, const int & ptBx, const int & ptBy)
+{
+	int xmin = fmin(ptAx, ptBx);
+	int xmax = fmax(ptAx, ptBx);
+	int ymin = fmin(ptAy, ptBy);
+	int ymax = fmax(ptAy, ptBy);
+	for (int x = xmin; x <= xmax; x++) {
+		for (int y = ymin; y <= ymax; y++) {
+			if (map[x][y].getType() == MUR) {
+				return false;
+			}
+		}
+	}
+	return true;
+}
+
+long ProblemData::scoreRouters() {
 	long score = 0;
 	for (auto router : routers) {
 		for (int x = -routerRange; x <= routerRange; x++) {
@@ -200,15 +311,15 @@ long ProblemData::calculMaxMoney()
 	return somme * 1000;
 }
 
-ostream& operator<<(ostream& os, const ProblemData& data)
+std::ostream& operator<<(std::ostream& os, const ProblemData& data)
 {
-	os << "Lignes : " << data.row << endl;
-	os << "Colonnes : " << data.col << endl;
-	os << "Portee routeur : " << data.routerRange << endl;
-	os << "Prix de connection du cable : " << data.connectPrice << endl;
-	os << "Prix routeur : " << data.routerPrice << endl;
-	os << "Budget : " << data.maxBudget << endl;
-	os << "Backbone situe en " << data.backboneRow << "," << data.backboneCol << endl;
+	os << "Lignes : " << data.row << std::endl;
+	os << "Colonnes : " << data.col << std::endl;
+	os << "Portee routeur : " << data.routerRange << std::endl;
+	os << "Prix de connection du cable : " << data.connectPrice << std::endl;
+	os << "Prix routeur : " << data.routerPrice << std::endl;
+	os << "Budget : " << data.maxBudget << std::endl;
+	os << "Backbone situe en " << data.backboneRow << "," << data.backboneCol << std::endl;
 	return os;
 }
 
@@ -217,42 +328,62 @@ Point ProblemData::operator()(const unsigned int row, const unsigned int col)
 	return map[row][col];
 }
 
-int ProblemData::getRow()
+int ProblemData::getRow() const
 {
 	return row;
 }
 
-int ProblemData::getCol()
+int ProblemData::getCol() const 
 {
 	return col;
 }
 
-int ProblemData::getRouterRange()
+int ProblemData::getRouterRange() const
 {
 	return routerRange;
 }
 
-unsigned int ProblemData::getConnectPrice()
+unsigned int ProblemData::getConnectPrice() const
 {
 	return connectPrice;
 }
 
-unsigned int ProblemData::getRouterPrice()
+int ProblemData::getRouterPrice() const
 {
 	return routerPrice;
 }
 
-unsigned int ProblemData::getMaxBudget()
+unsigned int ProblemData::getMaxBudget() const
 {
 	return maxBudget;
 }
 
-unsigned int ProblemData::getBackboneRow()
+int ProblemData::getBackboneRow() const
 {
 	return backboneRow;
 }
 
-unsigned int ProblemData::getBackboneCol()
+int ProblemData::getBackboneCol() const
 {
 	return backboneCol;
+}
+
+int ProblemData::getNbRouters() const
+{
+	return routers.size();
+}
+
+std::vector<Point> ProblemData::getRouters() const
+{
+	return routers;
+}
+
+int ProblemData::getNbCables() const
+{
+	return cables.size();
+}
+
+std::vector<Point> ProblemData::getCables() const
+{
+	return cables;
 }

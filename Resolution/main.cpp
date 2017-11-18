@@ -9,16 +9,15 @@
 #include "Object.h"
 #include "Graph.h"
 
+#define DEBUG
 
 
-
-using namespace std;
 
 void parseArgs(int argc)
 {
 	if (argc != 3) {
-		cerr << "Mauvais nombre d'arguments !" << endl;
-		exit(-1);
+		std::cerr << "Mauvais nombre d'arguments !" << std::endl;
+		std::exit(-1);
 	}
 }
 
@@ -34,7 +33,7 @@ int main(int argc, char *argv[])
 	}
 	else {
 		input = "opera.in";
-		output = "coord.txt";
+		output = "results.txt";
 	}
 
 	//parseArgs(argc);
@@ -44,17 +43,17 @@ int main(int argc, char *argv[])
 
 	//Pour pas pourrir les performances vis à vis de l'arbitre
 #ifdef DEBUG
-	cout << data(0, 0) << endl;
-	cout << "Nombres de points à disposition sur la carte : " << data.calculMaxMoney() << endl;
+	std::cout << data(0, 0) << std::endl;
+	std::cout << "Nombres de points à disposition sur la carte : " << data.calculMaxMoney() << std::endl;
 #endif 
 	
 
-	vector<Point> routers = data.depotRouter();
-	long scoreCellsCovered = data.scoreRouters(routers);
+	data.depotRouter();
+	long scoreCellsCovered = data.scoreRouters();
 
 #ifdef DEBUG
-	cout << "On a depose " << routers.size() << " routeurs sur la carte." << endl;
-	cout << "Score recuperer pour avoir convert des cellules : " << scoreCellsCovered << endl;
+	std::cout << "On a depose " << data.getNbRouters() << " routeurs sur la carte." << std::endl;
+	std::cout << "Score recuperer pour avoir convert des cellules : " << scoreCellsCovered << std::endl;
 #endif 
 	
 	/*Point ptA = Point(0, 1, TARGET);
@@ -64,10 +63,10 @@ int main(int argc, char *argv[])
 		cout << liste[f].getCoordX() << " - " << liste[f].getCoordY() << endl;
 	}*/
 	
-	Graph cables = Graph(routers);
+	Graph cables = Graph(data.getRouters());
 	cables.resolve();
 	
-	vector<Point> listCables = data.getRepartition(routers, cables.parent);
-	data.dumpInFile(output, routers, listCables);
+	std::vector<Point> listCables = data.getRepartition(cables.parent);
+	data.dumpInFile(output);
 	return 0;
 }

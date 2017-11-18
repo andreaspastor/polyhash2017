@@ -2,7 +2,6 @@
 #include <climits>
 #include <iostream>
 
-using namespace std;
 
 Graph::Graph()
 {
@@ -13,12 +12,12 @@ Graph::~Graph()
 {
 }
 
-Graph::Graph(const vector<Point>& routers)
+Graph::Graph(const std::vector<Point>& routers)
 {
 	int x = 0;
 	size = routers.size();
 	for (auto routerA : routers) {
-		graph.push_back(vector<int>());
+		graph.push_back(std::vector<int>());
 		for (auto routerB : routers) {
 			graph[x].push_back(routerA.distance(routerB));
 		}
@@ -26,7 +25,7 @@ Graph::Graph(const vector<Point>& routers)
 	}
 }
 
-int Graph::minDist(const vector<int>& dist, const vector<bool>& isConnected)
+int Graph::minDist(const std::vector<int>& dist, const std::vector<bool>& isConnected)
 {
 	int minDist = INT_MAX;
 	int minDist_index = 0;
@@ -40,16 +39,16 @@ int Graph::minDist(const vector<int>& dist, const vector<bool>& isConnected)
 	return minDist_index;
 }
 
-void Graph::printSolution(const vector<int>& parent)
+void Graph::printSolution(const std::vector<int>& parent)
 {
 	for (int x = 1; x < size; x++) {
-		cout << parent[x] << " - " << x << " : " << graph[x][parent[x]] << endl;
+		std::cout << parent[x] << " - " << x << " : " << graph[x][parent[x]] << std::endl;
 	}
 }
 
 void Graph::resolve() {
-	vector<int> dist(size, INT_MAX);
-	vector<bool> isConnected(size, false);
+	std::vector<int> dist(size, INT_MAX);
+	std::vector<bool> isConnected(size, false);
 	dist[0] = 0;
 	parent.resize(size);
 	parent[0] = -1;
@@ -66,7 +65,7 @@ void Graph::resolve() {
 	}
 #ifdef DEBUG
 	//printSolution(parent);
-	cout << weight << endl;
+	std::cout << weight << std::endl;
 #endif;
 }
 

@@ -4,22 +4,20 @@
 #include "Point.h"
 #include "ProblemData.h"
 
-using namespace std;
-
 class Graph
 {
 public:
 	Graph();
 	~Graph();
-	Graph(const vector<Point>& routers);
+	Graph(const std::vector<Point>& routers);
 	void resolve();
-	int minDist(const vector<int>& dist, const vector<bool>& isConnected);
-	void printSolution(const vector<int>& parent);
+	int minDist(const std::vector<int>& dist, const std::vector<bool>& isConnected);
+	void printSolution(const std::vector<int>& parent);
 	long getWeight();
 	int getSize();
-	vector<int> parent;
+	std::vector<int> parent;
 protected:
-	vector<vector<int>> graph;
+	std::vector<std::vector<int>> graph;
 	long weight;
 	int size;
 };

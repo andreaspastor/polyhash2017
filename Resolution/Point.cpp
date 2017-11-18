@@ -11,17 +11,17 @@ Point::~Point()
 {
 }
 
-int Point::getCoordX()
+int Point::getCoordX() const
 {
 	return coordX;
 }
 
-int Point::getCoordY()
+int Point::getCoordY() const
 {
 	return coordY;
 }
 
-Object Point::getType()
+Object Point::getType() const
 {
 	return type;
 }
@@ -38,7 +38,7 @@ Point::Point(int x, int y, Object object)
 	type = object;
 }
 
-unsigned int Point::distance(const Point &ptB) 
+unsigned int Point::distance(const Point &ptB) const
 {
 	int x = std::abs(coordX - ptB.coordX);
 	int y = std::abs(coordY - ptB.coordY);
@@ -80,6 +80,23 @@ bool Point::voisinDe(const Point & ptB)
 		return false;
 	}
 	return true;
+}
+
+Point Point::closestCable(const std::vector<Point>& listCables)
+{
+	Point closest;
+	int xx, yy, dist;
+	int minDist = 9999;
+	for (auto cable : listCables) {
+		xx = abs(coordX - cable.coordX);
+		yy = abs(coordY - cable.coordY);
+		dist = std::fmin(xx, yy) + std::abs(xx - yy);
+		if (dist < minDist) {
+			minDist = dist;
+			closest = cable;
+		}
+	}
+	return closest;
 }
 
 bool operator==(Point const & ptA, Point const & ptB)

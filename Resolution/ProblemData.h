@@ -8,41 +8,48 @@
 //Décommenter  la ligne pour avoir les affichages
 //#define DEBUG
 
-using namespace std;
-
 class ProblemData
 {
 public:
 	ProblemData();
 	~ProblemData();
 	void ParseFile(const char* filename);
-	void dumpInFile(const char* filename, vector<Point> & routers, const vector<Point> & listeCables);
-	vector<Point> depotRouter();
-	vector<Point> getRepartition(vector<Point>& routers, const vector<int> & parent);
-	bool isCover(Point & ptA, Point & ptB);
-	long scoreRouters(const vector<Point>& routers);
+	void dumpInFile(const char* filename);
+	int potentielWifi(const int & x, const int & y);
+	int distance(const int & x, const int & y);
+	void depotRouter();
+	std::vector<Point> getRepartition(const std::vector<int> & parent);
+	bool isCover(const Point & ptA, const Point & ptB);
+	bool isCover(const int & ptAx, const int & ptAy, const int & ptBx, const int & ptBy);
+	long scoreRouters();
 	long calculMaxMoney();
-	friend ostream& operator<<(ostream& os, const ProblemData& data);
+	friend std::ostream& operator<<(std::ostream& os, const ProblemData& data);
 	Point operator()(const unsigned int row, const unsigned int col);
 
-	int getRow();
-	int getCol();
-	int getRouterRange();//besoin que le fonction retourne int pour la fonction scoreRouters
-	unsigned int getConnectPrice();
-	unsigned int getRouterPrice();
-	unsigned int getMaxBudget();
-	unsigned int getBackboneRow();
-	unsigned int getBackboneCol();
+	int getRow() const;
+	int getCol() const;
+	int getRouterRange() const;//besoin que le fonction retourne int pour la fonction scoreRouters
+	unsigned int getConnectPrice() const;
+	int getRouterPrice() const;
+	unsigned int getMaxBudget() const;
+	int getBackboneRow() const;
+	int getBackboneCol() const;
+	int getNbRouters() const;
+	std::vector<Point> getRouters() const;
+	int getNbCables() const;
+	std::vector<Point> getCables() const;
 protected:
 	int row;
 	int col;
 	int routerRange;
 	unsigned int connectPrice;
-	unsigned int routerPrice;
+	int routerPrice;
 	unsigned int maxBudget;
-	unsigned int backboneRow;
-	unsigned int backboneCol;
-	vector<vector<Point>> map;
+	int backboneRow;
+	int backboneCol;
+	std::vector<std::vector<Point>> map;
+	std::vector<Point> routers;
+	std::vector<Point> cables;
 };
 
-void sorting(const vector<Point> & listeRef, vector<Point> & liste, const Point & ptCentre);
+void sorting(const std::vector<Point> & listeRef, std::vector<Point> & liste, const Point & ptCentre);
