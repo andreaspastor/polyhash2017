@@ -1,5 +1,6 @@
 #include <iostream>
 #include <string>
+#include <ctime>
 #include <chrono>
 #include <vector>
 #include <Windows.h>
@@ -20,12 +21,10 @@ double timeSolution(string &executable, string &input, string &strategy) {
 	cout << "Lancement de " << nb_test << " tests sur => " << input << " avec => " << strategy << endl;
 
 	for (int i = 0; i < nb_test; ++i) {
-		std::chrono::system_clock::time_point start = std::chrono::system_clock::now();
 
+		std::clock_t startcputime = std::clock();
 		system(executable.c_str());
-
-		std::chrono::duration<double> sec = std::chrono::system_clock::now() - start;
-		total += sec.count();
+		total += (std::clock() - startcputime) / (double)CLOCKS_PER_SEC;
 		cout << i+1 << " ";
 		
 	}
@@ -77,9 +76,10 @@ void compareSolutions(const char *directory, const char *resultFile) {
 		std::string file(directory);
 		file += fileName;
 		std::string extension = fileName.substr(fileName.length() - 4, fileName.length());
-		string path = string(directory) + "\\" + fileName;
+		string dirWin = string(directory);
+		std::replace(dirWin.begin(), dirWin.end(), '/', '\\');
+		string path = dirWin + "\\" + fileName;
 
-		//TODO: cast unix path to windows path
 		double duration = 0;
 		if (extension == ".exe") {
 			for (auto entry : entries) {
