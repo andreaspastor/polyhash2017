@@ -1,2 +1,0 @@
-Default_strategy.exe 0 secondes
-Default_strategy_copy.exe 0 secondes

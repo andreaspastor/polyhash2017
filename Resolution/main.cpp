@@ -9,7 +9,7 @@
 #include "Object.h"
 #include "Graph.h"
 
-#define DEBUG
+//#define DEBUG
 
 
 
@@ -32,7 +32,7 @@ int main(int argc, char *argv[])
 		output = argv[2];
 	}
 	else {
-		input = "opera.in";
+		input = "charleston_road.in";
 		output = "results.txt";
 	}
 
