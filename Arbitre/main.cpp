@@ -7,11 +7,13 @@
 #include "Parser.h"
 #include "FileHandling.hpp"
 
-
+/* How to use?
+Compile all startegies tha you want to time and test and put the file .exe in "Strategies" directory
+*/
 
 using namespace std;
 
-double timeSolution(string executable, string input, string strategy) {
+double timeSolution(string &executable, string &input, string &strategy) {
 	//Implement clock cpu time later
 	double nb_test = 10;
 	double total = 0;
@@ -32,7 +34,7 @@ double timeSolution(string executable, string input, string strategy) {
 	return result;
 }
 
-void dumpResults(string fileName, const vector<pair<string, double>>& results) {
+void dumpResults(string &fileName, const vector<pair<string, double>> &results) {
 	
 	ofstream monFlux(fileName);
 
@@ -52,15 +54,13 @@ bool isSolutionValid(const char *rule, const char *solution) {
 	parser.ParseRule(rule);
 	parser.ParseAnswer(solution);
 
-	bool valid = true;
-
-	//Ajouter vérification de la foncion de connectivité des routeurs au backbone
-	if (!parser.isBudgetRespected() || parser.areRoutersInWalls()) {
-		valid = false;
+	if (!parser.areAllRulesRespected()) {
 		cout << "L'arbitre a invalide le test, fin de l'evaluation de la solution" << endl;
+		return false;
 	}
-
-	return valid;
+	else {
+		return true;
+	}
 }
 
 void compareSolutions(const char *directory, const char *resultFile) {
@@ -93,14 +93,12 @@ void compareSolutions(const char *directory, const char *resultFile) {
 				}
 				
 			}
-
 			results.push_back(make_pair(fileName, duration));
 		}
-
 		++i;
 	}
 	sort(results.begin(), results.end(), [](auto left, auto right) { return left.second < right.second; });
-	dumpResults(resultFile, results);
+	dumpResults(string(resultFile), results);
 
 }
 

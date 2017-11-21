@@ -16,7 +16,6 @@ Parser::~Parser() {
 
 }
 
-//Parse the rule
 void Parser::ParseRule(const char* filename) {
 	ifstream file(filename);
 	if (!file) {
@@ -70,7 +69,7 @@ void Parser::ParseRule(const char* filename) {
 		}
 		currentRow += 1;
 	}
-	//cout << map[0][0] << endl;
+	file.close();
 }
 
 //Parse the answer file
@@ -127,17 +126,18 @@ void Parser::ParseAnswer(const char* filename) {
 		routers.push_back(Point(stoi(result[0]), stoi(result[1]), VIDE));
 		currentRow += 1;
 	}
+	file.close();
 }
 
-bool Parser::areRoutersConnectedToBackbone() {
-	return false;
+bool Parser::areRoutersConnectedToBackbone() const {
+	return true;
 }
 
 //Check if routers are in walls or not
 //Return 1 if true, 0 otherwise
-bool Parser::areRoutersInWalls() {
+bool Parser::areRoutersInWalls() const {
 	//Check for each routers if his coordonnates are walls or not
-	for (auto router : routers) {
+	for (auto &router : routers) {
 		if (map[router.getCoordX()][router.getCoordY()].getType() == MUR) return false;
 	}
 
@@ -146,60 +146,19 @@ bool Parser::areRoutersInWalls() {
 
 //Check if budget is respected (budged <= maxBudget)
 //Return bool (0 if not respected)
-bool Parser::isBudgetRespected() {
-	budgetCalculated = numberOfCellsConnected * connectPrice + numberOfRouters * routerPrice;
+bool Parser::isBudgetRespected() const {
+	int budgetCalculated = numberOfCellsConnected * connectPrice + numberOfRouters * routerPrice;
 #ifdef DEBUG
 	cout << "Budget max: " << maxBudget << " | " << "Calculated budget: " << budgetCalculated << endl;
 #endif
 	return budgetCalculated <= maxBudget;
 }
 
-int Parser::calculeScore() {
+bool Parser::areAllRulesRespected() const {
+	return (isBudgetRespected() && !areRoutersInWalls() && areRoutersConnectedToBackbone());
+}
+
+int Parser::computeScore() const {
 	return 0;
 }
 
-
-Point Parser::operator()(const unsigned int row, const unsigned int col)
-{
-	return map[row][col];
-}
-
-int Parser::getRow()
-{
-	return row;
-}
-
-int Parser::getCol()
-{
-	return col;
-}
-
-int Parser::getRouterRange()
-{
-	return routerRange;
-}
-
-unsigned int Parser::getConnectPrice()
-{
-	return connectPrice;
-}
-
-unsigned int Parser::getRouterPrice()
-{
-	return routerPrice;
-}
-
-unsigned int Parser::getMaxBudget()
-{
-	return maxBudget;
-}
-
-unsigned int Parser::getBackboneRow()
-{
-	return backboneRow;
-}
-
-unsigned int Parser::getBackboneCol()
-{
-	return backboneCol;
-}

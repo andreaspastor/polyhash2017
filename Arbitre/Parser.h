@@ -9,25 +9,28 @@
 class Parser {
 public:
 	Parser();
-	~Parser();
+	virtual ~Parser();
 	void ParseRule(const char*);
 	void ParseAnswer(const char*);
-	Point operator()(const unsigned int row, const unsigned int col);
+	
 
-	bool areRoutersConnectedToBackbone();
-	bool areRoutersInWalls();
-	bool isBudgetRespected();
+	bool areRoutersConnectedToBackbone() const;
+	bool areRoutersInWalls() const;
+	bool isBudgetRespected() const;
+	bool areAllRulesRespected() const;
+	int computeScore() const;
 
-	int calculeScore();
+	//besoin que le fonction retourne int pour la fonction scoreRouters
+	inline Point operator()(unsigned int row, unsigned int col) const { return map[row][col]; }
+	inline int getRouterRange() const { return routerRange; }
+	inline int getRow() const { return row; }
+	inline int getCol() const { return col; }
+	inline unsigned int getConnectPrice() const { return connectPrice;  }
+	inline unsigned int getRouterPrice() const { return routerPrice;  };
+	inline unsigned int getMaxBudget() const { return maxBudget;  }
+	inline unsigned int getBackboneRow() const { return backboneRow;  }
+	inline unsigned int getBackboneCol() const { return backboneCol;  }
 
-	int getRow();
-	int getCol();
-	int getRouterRange();//besoin que le fonction retourne int pour la fonction scoreRouters
-	unsigned int getConnectPrice();
-	unsigned int getRouterPrice();
-	unsigned int getMaxBudget();
-	unsigned int getBackboneRow();
-	unsigned int getBackboneCol();
 protected:
 	int row;
 	int col;
@@ -39,11 +42,10 @@ protected:
 	unsigned int backboneCol;
 
 	int numberOfCellsConnected;
-	std::vector<Point> cells;
 	int numberOfRouters;
-	std::vector<Point> routers;
 	int numberOfTargetCells;
-	int budgetCalculated;
 	
+	std::vector<Point> cells;
+	std::vector<Point> routers;
 	std::vector<std::vector<Point>> map;
 };

@@ -11,31 +11,9 @@ Point::~Point()
 {
 }
 
-int Point::getCoordX() const
-{
-	return coordX;
-}
 
-int Point::getCoordY() const
+Point::Point(int x, int y, Object object) : coordX(x), coordY(y), type(object) 
 {
-	return coordY;
-}
-
-Object Point::getType() const
-{
-	return type;
-}
-
-void Point::setType(Object obj)
-{
-	type = obj;
-}
-
-Point::Point(int x, int y, Object object)
-{
-	coordX = x;
-	coordY = y;
-	type = object;
 }
 
 unsigned int Point::distance(const Point &ptB) const
@@ -45,7 +23,7 @@ unsigned int Point::distance(const Point &ptB) const
 	return std::fmin(x, y) + std::abs(x - y);
 }
 
-std::vector<Point> Point::getCablesToB(Point & ptB)
+std::vector<Point> Point::getCablesToB(const Point &ptB) const
 {
 	std::vector<Point> listCables;
 	int deltaX = std::abs(coordX - ptB.coordX);
@@ -69,7 +47,7 @@ std::vector<Point> Point::getCablesToB(Point & ptB)
 	return listCables;
 }
 
-bool Point::voisinDe(const Point & ptB)
+bool Point::voisinDe(const Point & ptB) const
 {
 	int deltaX = std::abs(ptB.coordX - coordX);
 	int deltaY = std::abs(ptB.coordY - coordY);
@@ -82,12 +60,12 @@ bool Point::voisinDe(const Point & ptB)
 	return true;
 }
 
-Point Point::closestCable(const std::vector<Point>& listCables)
+Point Point::closestCable(const std::vector<Point>& listCables) const
 {
 	Point closest;
 	int xx, yy, dist;
 	int minDist = 9999;
-	for (auto cable : listCables) {
+	for (auto &cable : listCables) {
 		xx = abs(coordX - cable.coordX);
 		yy = abs(coordY - cable.coordY);
 		dist = std::fmin(xx, yy) + std::abs(xx - yy);

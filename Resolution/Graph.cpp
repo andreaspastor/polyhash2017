@@ -16,9 +16,9 @@ Graph::Graph(const std::vector<Point>& routers)
 {
 	int x = 0;
 	size = routers.size();
-	for (auto routerA : routers) {
+	for (auto &routerA : routers) {
 		graph.push_back(std::vector<int>());
-		for (auto routerB : routers) {
+		for (auto &routerB : routers) {
 			graph[x].push_back(routerA.distance(routerB));
 		}
 		x++;
@@ -39,7 +39,7 @@ int Graph::minDist(const std::vector<int>& dist, const std::vector<bool>& isConn
 	return minDist_index;
 }
 
-void Graph::printSolution(const std::vector<int>& parent)
+void Graph::printSolution(const std::vector<int>& parent) const
 {
 	for (int x = 1; x < size; x++) {
 		std::cout << parent[x] << " - " << x << " : " << graph[x][parent[x]] << std::endl;
@@ -69,12 +69,4 @@ void Graph::resolve() {
 #endif;
 }
 
-long Graph::getWeight()
-{
-	return weight;
-}
 
-int Graph::getSize()
-{
-	return size;
-}
