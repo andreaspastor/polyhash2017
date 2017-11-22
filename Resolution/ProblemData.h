@@ -51,6 +51,8 @@ protected:
 	int backboneCol;
 	std::vector<std::vector<Point>> mapEntree;
 	std::vector<std::vector<Point>> mapSortie;
+	std::vector<std::vector<double>> mapSearchCov;
+	std::vector<std::vector<double>> mapSearchCab;
 	std::vector<Point> routers;
 	std::vector<Point> cables;
 };

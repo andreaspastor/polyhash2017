@@ -131,8 +131,8 @@ void dump(const char* filename, std::vector<Point> routers) {
 
 int ProblemData::potentielWifi(int x , int y) const {
 	int score = 0;
-	for (int i = -routerRange; i <= routerRange; i += 2) {
-		for (int j = -routerRange; j <= routerRange; j += 2) {
+	for (int i = -routerRange; i <= routerRange; i += 3) {
+		for (int j = -routerRange; j <= routerRange; j += 3) {
 			if (mapEntree[x + i][y + j].getType() == TARGET && mapSortie[x +i][y + j].getType() != COVERED && isCover(x, y, x + i, y + j)) {
 				score += 1000;
 			}
@@ -166,6 +166,16 @@ void ProblemData::depotRouter() {
 	int distanceToCable;
 	int value = 0;
 
+	//initialisation mapRecherche
+	for (int x = routerRange; x < row - routerRange; x++) {
+		mapSearchCab.push_back(std::vector<double>());
+		mapSearchCov.push_back(std::vector<double>());
+		for (int y = routerRange; y < col - routerRange; y++) {
+			mapSearchCov[x - routerRange].push_back(potentielWifi(x, y));
+			mapSearchCab[x - routerRange].push_back(distance(x, y));
+		}
+	}
+
 	while (maxBudget > 0) {
 
 		//Remise à zero des valeurs
@@ -174,7 +184,16 @@ void ProblemData::depotRouter() {
 		potentielValue = 0;//peut etre initialiser à la valeur du coût d'un routeur
 		distanceToCable = maxPotentiel.distance(plusProcheCable);
 
-		for (int x = routerRange; x < row - routerRange; x += 5) {
+		for (int x = 0; x < mapSearchCov.size(); x++) {
+			for (int y = 0; y < mapSearchCov[x].size(); y++) {
+				value = mapSearchCov[x][y] - mapSearchCab[x][y];
+				if (value > potentielValue) {
+					maxPotentiel = Point(x, y, ROUTER);
+					potentielValue = value;
+				}
+			}
+		}
+		/*for (int x = routerRange; x < row - routerRange; x += 5) {
 			for (int y = routerRange; y < col - routerRange; y += 5) {
 				value = potentielWifi(x, y) - distance(x, y);
 				if (value > potentielValue) {
@@ -182,7 +201,8 @@ void ProblemData::depotRouter() {
 					potentielValue = value;
 				}
 			}
-		}
+		}*/
+
 		//Ajout du router
 		if (potentielValue == 0) {
 			//Si l'on a pas reussi à trouver des points qui doivent prendre du wifi
