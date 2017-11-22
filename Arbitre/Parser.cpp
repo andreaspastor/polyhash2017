@@ -224,9 +224,10 @@ bool Parser::isRouterCoveringCell(int ptAx, int ptAy, int ptBx, int ptBy) const{
 }
 
 void Parser::coverCellsMap(){
+	int range = routerRange;
 	for (auto &router : routers) {
-		for (int x = -routerRange; x <= routerRange; x++) {
-			for (int y = -routerRange; y <= routerRange; y++) {
+		for (int x = -range; x <= range; x++) {
+			for (int y = -range; y <= range; y++) {
 				if (isRouterCoveringCell(router.getCoordX(), router.getCoordY(), router.getCoordX() + x, router.getCoordY() + y)) {
 					map[router.getCoordX() + x][router.getCoordY() + y].setType(COVERED);
 				}

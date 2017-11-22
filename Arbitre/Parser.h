@@ -1,7 +1,7 @@
 #pragma once
 
 #include "../Resolution/Point.h"
-#include "../Resolution/Objet.h"
+#include "../Resolution/Object.h"
 #include <vector>
 #include <unordered_map>
 #include <utility>
