@@ -5,6 +5,7 @@
 #include <algorithm>
 #include <cmath>
 
+#define DEBUG
 
 ProblemData::ProblemData()
 {
@@ -46,19 +47,23 @@ void ProblemData::ParseFile(const char * filename)
 	unsigned int currentRow = 0;
 	while (currentRow < row) {
 		std::getline(file, line);
-		map.push_back(std::vector<Point>());
+		mapEntree.push_back(std::vector<Point>());
+		mapSortie.push_back(std::vector<Point>());
 		for (unsigned int currentCol = 0; currentCol < line.size(); currentCol ++) {
 			switch (line[currentCol]) {
 			case '#':
-				map[currentRow].push_back(Point(currentRow, currentCol, MUR));
+				mapEntree[currentRow].push_back(Point(currentRow, currentCol, MUR));
+				mapSortie[currentRow].push_back(Point(currentRow, currentCol, MUR));
 				break;
 
 			case '.':
-				map[currentRow].push_back(Point(currentRow, currentCol, TARGET));
+				mapEntree[currentRow].push_back(Point(currentRow, currentCol, TARGET));
+				mapSortie[currentRow].push_back(Point(currentRow, currentCol, TARGET));
 				break;
 
 			case '-':
-				map[currentRow].push_back(Point(currentRow, currentCol, VIDE));
+				mapEntree[currentRow].push_back(Point(currentRow, currentCol, VIDE));
+				mapSortie[currentRow].push_back(Point(currentRow, currentCol, VIDE));
 				break;
 
 			default:
@@ -71,7 +76,7 @@ void ProblemData::ParseFile(const char * filename)
 	}
 	file.close();
 #ifdef DEBUG
-	std::cout << map[0][0] << std::endl;
+	std::cout << mapEntree[0][0] << std::endl;
 #endif
 }
 
@@ -116,7 +121,7 @@ void dump(const char* filename, std::vector<Point> routers) {
 
 	for (int x = routerRange; x < row; x += (2 * routerRange + 1)) {
 		for (int y = routerRange; y < col; y += (2 * routerRange + 1)) {
-			if (map[x][y].getType() == TARGET) {
+			if (mapEntree[x][y].getType() == TARGET) {
 				routers.push_back(Point(x, y, ROUTER));
 			}
 		}
@@ -126,9 +131,9 @@ void dump(const char* filename, std::vector<Point> routers) {
 
 int ProblemData::potentielWifi(int x , int y) const {
 	int score = 0;
-	for (int i = -routerRange; i <= routerRange; i += 4) {
-		for (int j = -routerRange; j <= routerRange; j += 4) {
-			if (map[x + i][y + j].getType() != COVERED && isCover(x, y, x + i, y + j)) {
+	for (int i = -routerRange; i <= routerRange; i += 2) {
+		for (int j = -routerRange; j <= routerRange; j += 2) {
+			if (mapEntree[x + i][y + j].getType() == TARGET && mapSortie[x +i][y + j].getType() != COVERED && isCover(x, y, x + i, y + j)) {
 				score += 1000;
 			}
 		}
@@ -190,7 +195,7 @@ void ProblemData::depotRouter() {
 		for (int x = -routerRange; x <= routerRange; x++) {
 			for (int y = -routerRange; y <= routerRange; y++) {
 				if (isCover(maxPotentiel.getCoordX(), maxPotentiel.getCoordY(), maxPotentiel.getCoordX() + x, maxPotentiel.getCoordY() + y)) {
-					map[maxPotentiel.getCoordX() + x][maxPotentiel.getCoordY() + y].setType(COVERED);
+					mapSortie[maxPotentiel.getCoordX() + x][maxPotentiel.getCoordY() + y].setType(COVERED);
 				}
 			}
 		}
@@ -239,7 +244,7 @@ std::vector<Point> ProblemData::getRepartition(const std::vector<int> & parent)
 		}
 	}
 #ifdef DEBUG
-	cout << listCables.size() << endl;
+	std::cout << cables.size() << std::endl;
 #endif 
 
 	std::vector<Point> listCablesSorted;
@@ -266,7 +271,7 @@ bool ProblemData::isCover(const Point& ptA, const Point& ptB) const
 	int ymax = std::fmax(ptA.getCoordY(), ptB.getCoordY());
 	for (int x = xmin; x <= xmax; x++) {
 		for (int y = ymin; y <= ymax; y++) {
-			if (map[x][y].getType() == MUR) {
+			if (mapEntree[x][y].getType() == MUR) {
 				return false;
 			}
 		}
@@ -282,7 +287,7 @@ bool ProblemData::isCover(int ptAx, int ptAy, int ptBx, int ptBy) const
 	int ymax = fmax(ptAy, ptBy);
 	for (int x = xmin; x <= xmax; x++) {
 		for (int y = ymin; y <= ymax; y++) {
-			if (map[x][y].getType() == MUR) {
+			if (mapEntree[x][y].getType() == MUR) {
 				return false;
 			}
 		}
@@ -295,9 +300,9 @@ long ProblemData::scoreRouters() {
 	for (auto &router : routers) {
 		for (int x = -routerRange; x <= routerRange; x++) {
 			for (int y = -routerRange; y <= routerRange; y++) {
-				if (map[router.getCoordX() + x] [router.getCoordY() + y].getType() != COVERED && isCover(router, map[router.getCoordX() + x][router.getCoordY() + y])) {
+				if (mapSortie[router.getCoordX() + x] [router.getCoordY() + y].getType() != COVERED && isCover(router, mapEntree[router.getCoordX() + x][router.getCoordY() + y])) {
 					score += 1000;
-					map[router.getCoordX() + x][router.getCoordY() + y].setType(COVERED);//Besoin de dire COVERED pour eviter de compter 2 fois la meme cellule
+					mapSortie[router.getCoordX() + x][router.getCoordY() + y].setType(COVERED);//Besoin de dire COVERED pour eviter de compter 2 fois la meme cellule
 				}
 			}
 		}
@@ -308,7 +313,7 @@ long ProblemData::scoreRouters() {
 long ProblemData::calculMaxMoney() const
 {
 	long somme = 0;
-	for (auto &x: map) {
+	for (auto &x: mapEntree) {
 		for (auto &y : x) {
 			if (y.getType() == TARGET)
 			{

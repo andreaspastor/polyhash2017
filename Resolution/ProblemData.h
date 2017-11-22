@@ -26,7 +26,7 @@ public:
 	long calculMaxMoney() const;
 	friend std::ostream& operator<<(std::ostream& os, const ProblemData& data);
 
-	inline Point operator()(unsigned int row, unsigned int col) const { return map[row][col]; }
+	inline Point operator()(unsigned int row, unsigned int col) const { return mapEntree[row][col]; }
 	inline int getRouterRange() const { return routerRange; }
 	inline int getRow() const { return row; }
 	inline int getCol() const { return col; }
@@ -49,7 +49,8 @@ protected:
 	unsigned int maxBudget;
 	int backboneRow;
 	int backboneCol;
-	std::vector<std::vector<Point>> map;
+	std::vector<std::vector<Point>> mapEntree;
+	std::vector<std::vector<Point>> mapSortie;
 	std::vector<Point> routers;
 	std::vector<Point> cables;
 };
