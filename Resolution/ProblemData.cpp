@@ -17,7 +17,7 @@ ProblemData::~ProblemData()
 
 void ProblemData::ParseFile(const char * filename)
 {
-	std::ifstream file(filename);
+	std::ifstream file("..\\Input\\" + std::string(filename));
 	if (!file) {
 		std::cerr << "Ce fichier n'existe pas !" << std::endl;
 		exit(-1);
@@ -77,7 +77,8 @@ void ProblemData::ParseFile(const char * filename)
 
 void ProblemData::dumpInFile(const char * filename)
 {
-	std::ofstream monFlux(filename);
+
+	std::ofstream monFlux(("..\\Output\\" + std::string(filename)));
 	
 	if (monFlux) {
 		monFlux << cables.size() << std::endl;
@@ -193,7 +194,9 @@ void ProblemData::depotRouter() {
 				}
 			}
 		}
+#ifdef DEBUG
 		std::cout << "Ajout de routeur no " << getNbRouters() << " : " << potentielValue << std::endl;
+#endif 
 		//Ajout des cables
 		plusProcheCable = maxPotentiel.closestCable(cables);
 		std::vector<Point> linkCables = maxPotentiel.getCablesToB(plusProcheCable);
@@ -203,8 +206,10 @@ void ProblemData::depotRouter() {
 				cables.push_back(cable);
 			}
 		}
+#ifdef DEBUG
 		std::cout << "Nombre de cables : " << getNbCables() << std::endl;
 		std::cout << "Budget restant de " << maxBudget << " euros." << std::endl;
+#endif 
 	}
 	
 

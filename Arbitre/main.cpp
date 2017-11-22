@@ -15,7 +15,7 @@ using namespace std;
 
 double timeSolution(string &executable, string &input, string &strategy) {
 	//Implement clock cpu time later
-	double nb_test = 10;
+	double nb_test = 5;
 	double total = 0;
 	cout << "Lancement de " << nb_test << " tests sur => " << input << " avec => " << strategy << endl;
 
@@ -36,7 +36,7 @@ double timeSolution(string &executable, string &input, string &strategy) {
 
 void dumpResults(string &fileName, const vector<pair<string, double>> &results) {
 	
-	ofstream monFlux(fileName);
+	ofstream monFlux("..\\Output\\" + fileName);
 
 	if (!monFlux) {
 		cerr << "Impossible de creer le fichier : " << fileName << endl;
@@ -51,8 +51,8 @@ void dumpResults(string &fileName, const vector<pair<string, double>> &results) 
 
 bool isSolutionValid(const char *rule, const char *solution) {
 	Parser parser;
-	parser.ParseRule(rule);
-	parser.ParseAnswer(solution);
+	parser.ParseRule(("..\\Input\\" + string(rule)).c_str());
+	parser.ParseAnswer(("..\\Output\\" + string(solution)).c_str());
 
 	if (!parser.areAllRulesRespected()) {
 		cout << "L'arbitre a invalide le test, fin de l'evaluation de la solution" << endl;
@@ -110,7 +110,7 @@ int main(int argc, char *argv[])
 	if (argc != 3) {
 		//Defaut settings, only for tests
 		directory = "..\\Strategies";
-		resultFile = "results.txt";
+		resultFile = "timing_results.txt";
 	}
 	else {
 		directory = argv[1];
