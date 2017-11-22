@@ -173,6 +173,13 @@ bool Parser::areRoutersConnectedToBackbone(){
 		}
 		founded = false;
 	}
+
+	for (auto &router : routers) {
+		if (getPointMapSolution(router.getCoordX(), router.getCoordY()).getType() != CABLE) {
+			return false;
+		}
+	}
+
 	return true;
 }
 
