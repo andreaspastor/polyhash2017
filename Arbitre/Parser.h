@@ -1,6 +1,7 @@
 #pragma once
 
 #include "../Resolution/Point.h"
+#include "../Resolution/Objet.h"
 #include <vector>
 #include <unordered_map>
 #include <utility>
@@ -21,8 +22,12 @@ public:
 	void ParseRule(const char*);
 	void ParseAnswer(const char*);
 	void initialiseMapSolution();
-	Point& getPointMapSolution(unsigned int x, unsigned int y);
 	void setPointMapSolution(const Point &p);
+	void coverCellsMap();
+
+	Point& getPointMapSolution(unsigned int x, unsigned int y);
+
+	bool isRouterCoveringCell(int ptAx, int ptAy, int ptBx, int ptBy) const;
 
 	bool areRoutersConnectedToBackbone();
 	bool areRoutersInWalls() const;

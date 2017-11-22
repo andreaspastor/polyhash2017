@@ -208,6 +208,33 @@ bool Parser::areAllRulesRespected(){
 	return (isBudgetRespected() && !areRoutersInWalls() && areRoutersConnectedToBackbone());
 }
 
+bool Parser::isRouterCoveringCell(int ptAx, int ptAy, int ptBx, int ptBy) const{
+	int xmin = fmin(ptAx, ptBx);
+	int xmax = fmax(ptAx, ptBx);
+	int ymin = fmin(ptAy, ptBy);
+	int ymax = fmax(ptAy, ptBy);
+	for (int x = xmin; x <= xmax; x++) {
+		for (int y = ymin; y <= ymax; y++) {
+			if (map[x][y].getType() == MUR) {
+				return false;
+			}
+		}
+	}
+	return true;
+}
+
+void Parser::coverCellsMap(){
+	for (auto &router : routers) {
+		for (int x = -routerRange; x <= routerRange; x++) {
+			for (int y = -routerRange; y <= routerRange; y++) {
+				if (isRouterCoveringCell(router.getCoordX(), router.getCoordY(), router.getCoordX() + x, router.getCoordY() + y)) {
+					map[router.getCoordX() + x][router.getCoordY() + y].setType(COVERED);
+				}
+			}
+		}
+	}
+}
+
 int Parser::computeScore() const {
 	return 0;
 }
