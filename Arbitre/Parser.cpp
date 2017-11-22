@@ -138,26 +138,26 @@ void Parser::initialiseMapSolution()
 	}
 }
 
-Point & Parser::getPointMapSolution(unsigned int x, unsigned int y) const
+Point & Parser::getPointMapSolution(unsigned int x, unsigned int y)
 {
-	return map_solution[std::make_pair(x, y)];
+	return map_solution[std::pair<unsigned int, unsigned int>(x,y)];
 }
 
 void Parser::setPointMapSolution(const Point & p)
 {
-	map_solution[std::make_pair(p.getCoordX, p.getCoordY)] = p;
+	map_solution[std::make_pair(p.getCoordX(), p.getCoordY())] = p;
 }
 
 bool Parser::areRoutersConnectedToBackbone(){
 	bool founded = false;
-	this->initialiseMapSolution();
+	initialiseMapSolution();
 	getPointMapSolution(getBackboneRow(),getBackboneCol()).setType(CABLE);
 	for (auto& fil : cells){
 		//Pour chaque cable, on parcours ses 8 voisins
 		//Et on vérifie qu'au moins 1 d'entre eux est un cable
 		for (int i = -1; i < 2; i++) {
 			for (int j = -1; j < 2; j++) {
-				if (getPointMapSolution(fil.getCoordX()+i, fil.getCoordY()+j).getType == CABLE) {
+				if (getPointMapSolution(fil.getCoordX()+i, fil.getCoordY()+j).getType() == CABLE) {
 					//Si un de ses voisins est un cable, on l'ajoute dans la map solution
 					founded = true;
 					getPointMapSolution(fil.getCoordX()+i, fil.getCoordY()+j).setType(CABLE);
@@ -197,7 +197,7 @@ bool Parser::isBudgetRespected() const {
 	return budgetCalculated <= maxBudget;
 }
 
-bool Parser::areAllRulesRespected() const {
+bool Parser::areAllRulesRespected(){
 	return (isBudgetRespected() && !areRoutersInWalls() && areRoutersConnectedToBackbone());
 }
 

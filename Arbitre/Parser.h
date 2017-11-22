@@ -8,6 +8,12 @@
 //D�commenter pour tester
 //#define DEBUG
 
+struct HashPair {
+	size_t operator()(const std::pair<unsigned int, unsigned int>& p) const {
+		return (p.first + p.second) * (p.first + p.second + 1) / 2 + p.second;
+	}
+};
+
 class Parser {
 public:
 	Parser();
@@ -15,20 +21,20 @@ public:
 	void ParseRule(const char*);
 	void ParseAnswer(const char*);
 	void initialiseMapSolution();
-	Point& getPointMapSolution(unsigned int x, unsigned int y) const;
+	Point& getPointMapSolution(unsigned int x, unsigned int y);
 	void setPointMapSolution(const Point &p);
 
 	bool areRoutersConnectedToBackbone();
 	bool areRoutersInWalls() const;
 	bool isBudgetRespected() const;
-	bool areAllRulesRespected() const;
+	bool areAllRulesRespected();
 	int computeScore() const;
 
 	//besoin que le fonction retourne int pour la fonction scoreRouters
 	inline Point operator()(unsigned int row, unsigned int col) const { return map[row][col]; }
-	inline int getRouterRange() const { return routerRange; }
-	inline int getRow() const { return row; }
-	inline int getCol() const { return col; }
+	inline unsigned int getRouterRange() const { return routerRange; }
+	inline unsigned int getRow() const { return row; }
+	inline unsigned int getCol() const { return col; }
 	inline unsigned int getConnectPrice() const { return connectPrice; }
 	inline unsigned int getRouterPrice() const { return routerPrice; };
 	inline unsigned int getMaxBudget() const { return maxBudget; }
@@ -36,9 +42,9 @@ public:
 	inline unsigned int getBackboneCol() const { return backboneCol; }
 
 protected:
-	int row;
-	int col;
-	int routerRange;
+	unsigned int row;
+	unsigned int col;
+	unsigned int routerRange;
 	unsigned int connectPrice;
 	unsigned int routerPrice;
 	unsigned int maxBudget;
@@ -53,5 +59,6 @@ protected:
 	std::vector<Point> routers;
 	std::vector<std::vector<Point>> map;
 	/*Reconstruction de la map petit a petit pour vérifier la solution*/
-	std::unordered_map<std::pair<unsigned int, unsigned int>, Point> map_solution;
+	std::unordered_map<std::pair<unsigned int, unsigned int>, Point, HashPair> map_solution;
 };
+
