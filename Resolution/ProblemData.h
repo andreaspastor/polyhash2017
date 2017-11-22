@@ -32,7 +32,7 @@ public:
 	inline int getCol() const { return col; }
 	inline unsigned int getConnectPrice() const { return connectPrice; }
 	inline int getRouterPrice() const { return routerPrice; };
-	inline unsigned int getMaxBudget() const { return maxBudget; }
+	inline int getMaxBudget() const { return maxBudget; }
 	inline int getBackboneRow() const { return backboneRow; }
 	inline int getBackboneCol() const { return backboneCol; }
 	inline int getNbRouters() const { return routers.size(); }
@@ -46,7 +46,7 @@ protected:
 	int routerRange;
 	unsigned int connectPrice;
 	int routerPrice;
-	unsigned int maxBudget;
+	int maxBudget;
 	int backboneRow;
 	int backboneCol;
 	std::vector<std::vector<Point>> mapEntree;
