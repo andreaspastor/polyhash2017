@@ -129,8 +129,43 @@ void Parser::ParseAnswer(const char* filename) {
 	file.close();
 }
 
-bool Parser::areRoutersConnectedToBackbone() const {
+bool Parser::areRoutersConnectedToBackbone(){
+	bool founded = false;
+	this->initialiseMapSolution();
+	getPointMapSolution(getBackboneRow(),getBackboneCol()).setType(CABLE);
+	for (auto& fil : cells){
+		//Pour chaque cable, on parcours ses 8 voisins
+		//Et on vérifie qu'au moins 1 d'entre eux est un cable
+		for (int i = -1; i < 2; i++) {
+			for (int j = -1; j < 2; j++) {
+				if (getPointMapSolution(fil.getCoordX()+i, fil.getCoordY()+j).getType == CABLE) {
+					//Si un de ses voisins est un cable, on l'ajoute dans la map solution
+					founded = true;
+					getPointMapSolution(fil.getCoordX()+i, fil.getCoordY()+j).setType(CABLE);
+					break;
+				}
+			}
+			if (founded) {
+				break;
+			}
+		}
+		if (!founded) {
+			return false;
+		}
+		founded = false;
+	}
 	return true;
+}
+
+void Parser::initialiseMapSolution() {
+	for (int i = 0; i < row; i++) {
+		for(int j=0;j<col;j++){
+			map_solution[std::pair(i,j)] = Point(i, j, VIDE);
+	}
+}
+
+Point& Parser::getPointMapSolution(unsigned int x, unsigned int y) const{
+	return map_solution[std::pair(x, y)];
 }
 
 //Check if routers are in walls or not
@@ -161,4 +196,3 @@ bool Parser::areAllRulesRespected() const {
 int Parser::computeScore() const {
 	return 0;
 }
-
