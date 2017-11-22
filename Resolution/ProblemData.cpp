@@ -131,11 +131,14 @@ void dump(const char* filename, std::vector<Point> routers) {
 
 int ProblemData::potentielWifi(int x , int y) const {
 	int score = 0;
-	for (int i = -routerRange; i <= routerRange; i += 3) {
-		for (int j = -routerRange; j <= routerRange; j += 3) {
-			if (mapEntree[x + i][y + j].getType() == TARGET && mapSortie[x +i][y + j].getType() != COVERED && isCover(x, y, x + i, y + j)) {
-				score += 1000;
+	for (int i = -routerRange; i <= routerRange; i += 1) {
+		for (int j = -routerRange; j <= routerRange; j += 1) {
+			if (x + i > -1 && y + j > -1 && x + i < row && y + j < col) {
+				if (mapEntree[x + i][y + j].getType() == TARGET && mapSortie[x + i][y + j].getType() != COVERED && isCover(x, y, x + i, y + j)) {
+					score += 1000;
+				}
 			}
+			
 		}
 	}
 	return score;
@@ -167,12 +170,13 @@ void ProblemData::depotRouter() {
 	int value = 0;
 
 	//initialisation mapRecherche
-	for (int x = routerRange; x < row - routerRange; x++) {
+	for (int x = 0; x < row; x++) {
 		mapSearchCab.push_back(std::vector<double>());
 		mapSearchCov.push_back(std::vector<double>());
-		for (int y = routerRange; y < col - routerRange; y++) {
-			mapSearchCov[x - routerRange].push_back(potentielWifi(x, y));
-			mapSearchCab[x - routerRange].push_back(distance(x, y));
+		std::cout << x << " / " << row << std::endl;
+		for (int y = 0; y < col; y++) {
+			mapSearchCov[x].push_back(potentielWifi(x, y));
+			mapSearchCab[x].push_back(distance(x, y));
 		}
 	}
 
@@ -219,6 +223,13 @@ void ProblemData::depotRouter() {
 				}
 			}
 		}
+
+		//update de la map de solution couverture wifi après avoir update la couverture
+		for (int x = -2*routerRange; x <= 2*routerRange; x++) {
+			for (int y = -2*routerRange; y <= 2*routerRange; y++) {
+				mapSearchCov[maxPotentiel.getCoordX() + x][maxPotentiel.getCoordY() + y] = potentielWifi(maxPotentiel.getCoordX() + x, maxPotentiel.getCoordY() + y);
+			}
+		}
 #ifdef DEBUG
 		std::cout << "Ajout de routeur no " << getNbRouters() << " : " << potentielValue << std::endl;
 #endif 
@@ -227,7 +238,7 @@ void ProblemData::depotRouter() {
 		std::vector<Point> linkCables = maxPotentiel.getCablesToB(plusProcheCable);
 		maxBudget -= linkCables.size() * connectPrice;
 		for (auto &cable : linkCables) {
-			if (find(cables.begin(), cables.end(), cable) == cables.end()) {
+			if (find(cables.begin(), cables.end(), cable) == cables.end()) {//newCable UNIQUE !!!
 				cables.push_back(cable);
 			}
 		}
@@ -237,8 +248,19 @@ void ProblemData::depotRouter() {
 #endif 
 	}
 	
+	//update de la map de solution cable apres que l'on est mis les cables à jour
+	for (int x = 0; x < mapSearchCab.size(); x++) {
+		for (int y = 0; y < mapSearchCab[x].size(); y++) {
+			mapSearchCab[x][y] = distance(x, y);//amélioration en passant seulement newCable UNIQUE !!!
+		}
+	}
 
-
+	std::cout << "Sorting des cables" << std::endl;
+	std::vector<Point> listCablesSorted;
+	Point backbone(backboneRow, backboneCol, CABLE);
+	//suppression du point backbone avant de sort, il avait été utile pour trouver le plus court distance router cable
+	cables.erase(cables.begin());
+	sorting(cables, listCablesSorted, backbone);
 
 	/*for (int x = routerRange; x < row; x += (2 * routerRange + 1)) {
 		for (int y = routerRange; y < col; y += (2 * routerRange + 1)) {
