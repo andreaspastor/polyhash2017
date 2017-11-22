@@ -196,8 +196,8 @@ bool Parser::areRoutersInWalls() const {
 
 //Check if budget is respected (budged <= maxBudget)
 //Return bool (0 if not respected)
-bool Parser::isBudgetRespected() const {
-	int budgetCalculated = numberOfCellsConnected * connectPrice + numberOfRouters * routerPrice;
+bool Parser::isBudgetRespected(){
+	budgetCalculated = numberOfCellsConnected * connectPrice + numberOfRouters * routerPrice;
 #ifdef DEBUG
 	cout << "Budget max: " << maxBudget << " | " << "Calculated budget: " << budgetCalculated << endl;
 #endif
@@ -224,12 +224,16 @@ bool Parser::isRouterCoveringCell(int ptAx, int ptAy, int ptBx, int ptBy) const{
 }
 
 void Parser::coverCellsMap(){
+	realNumberOfCellsConnected = 0;
 	int range = routerRange;
 	for (auto &router : routers) {
 		for (int x = -range; x <= range; x++) {
 			for (int y = -range; y <= range; y++) {
 				if (isRouterCoveringCell(router.getCoordX(), router.getCoordY(), router.getCoordX() + x, router.getCoordY() + y)) {
-					map[router.getCoordX() + x][router.getCoordY() + y].setType(COVERED);
+					if (map[router.getCoordX() + x][router.getCoordY() + y].getType() != COVERED) {
+						map[router.getCoordX() + x][router.getCoordY() + y].setType(COVERED);
+						realNumberOfCellsConnected++;
+					}
 				}
 			}
 		}
@@ -237,5 +241,6 @@ void Parser::coverCellsMap(){
 }
 
 int Parser::computeScore() const {
-	return 0;
+	
+	return 1000 * realNumberOfCellsConnected + budgetCalculated;
 }

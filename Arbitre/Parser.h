@@ -31,7 +31,7 @@ public:
 
 	bool areRoutersConnectedToBackbone();
 	bool areRoutersInWalls() const;
-	bool isBudgetRespected() const;
+	bool isBudgetRespected();
 	bool areAllRulesRespected();
 	int computeScore() const;
 
@@ -59,6 +59,8 @@ protected:
 	int numberOfCellsConnected;
 	int numberOfRouters;
 	int numberOfTargetCells;
+	int realNumberOfCellsConnected;
+	int budgetCalculated;
 
 	std::vector<Point> cells;
 	std::vector<Point> routers;
