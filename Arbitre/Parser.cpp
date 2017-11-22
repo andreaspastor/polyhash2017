@@ -129,6 +129,25 @@ void Parser::ParseAnswer(const char* filename) {
 	file.close();
 }
 
+void Parser::initialiseMapSolution()
+{
+	for (int i = 0; i < row; i++) {
+		for (int j = 0; j < col; j++) {
+			setPointMapSolution(Point(i, j, VIDE));
+		}
+	}
+}
+
+Point & Parser::getPointMapSolution(unsigned int x, unsigned int y) const
+{
+	return map_solution[std::make_pair(x, y)];
+}
+
+void Parser::setPointMapSolution(const Point & p)
+{
+	map_solution[std::make_pair(p.getCoordX, p.getCoordY)] = p;
+}
+
 bool Parser::areRoutersConnectedToBackbone(){
 	bool founded = false;
 	this->initialiseMapSolution();
@@ -155,17 +174,6 @@ bool Parser::areRoutersConnectedToBackbone(){
 		founded = false;
 	}
 	return true;
-}
-
-void Parser::initialiseMapSolution() {
-	for (int i = 0; i < row; i++) {
-		for(int j=0;j<col;j++){
-			map_solution[std::pair(i,j)] = Point(i, j, VIDE);
-	}
-}
-
-Point& Parser::getPointMapSolution(unsigned int x, unsigned int y) const{
-	return map_solution[std::pair(x, y)];
 }
 
 //Check if routers are in walls or not

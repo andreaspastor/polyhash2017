@@ -3,6 +3,7 @@
 #include "../Resolution/Point.h"
 #include <vector>
 #include <unordered_map>
+#include <utility>
 
 //D�commenter pour tester
 //#define DEBUG
@@ -15,7 +16,7 @@ public:
 	void ParseAnswer(const char*);
 	void initialiseMapSolution();
 	Point& getPointMapSolution(unsigned int x, unsigned int y) const;
-
+	void setPointMapSolution(const Point &p);
 
 	bool areRoutersConnectedToBackbone();
 	bool areRoutersInWalls() const;
