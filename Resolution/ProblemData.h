@@ -18,6 +18,7 @@ public:
 	void dumpInFile(const char* filename);
 	int potentielWifi(int x, int y) const;
 	int distance(int x, int y) const;
+	int distanceNewCables(int x, int y, const std::vector<Point>& newCables) const;
 	void depotRouter();
 	std::vector<Point> getRepartition(const std::vector<int> & parent);
 	bool isCover(const Point & ptA, const Point & ptB) const;

@@ -158,6 +158,20 @@ int ProblemData::distance(int x, int y) const{
 	return minDist;
 }
 
+int ProblemData::distanceNewCables(int x, int y, const std::vector<Point> & newCables) const {
+	int xx, yy, dist;
+	int minDist = 9999;
+	for (auto &cable : newCables) {
+		xx = std::abs(x - cable.getCoordX());
+		yy = std::abs(y - cable.getCoordY());
+		dist = std::fmin(xx, yy) + std::abs(xx - yy);
+		if (dist < minDist) {
+			minDist = dist;
+		}
+	}
+	return minDist;
+}
+
 void ProblemData::depotRouter() {
 	//ajout du backbone car besoin dans le graphe couvrant
 	routers.push_back(Point(backboneRow, backboneCol, CABLE));
@@ -242,16 +256,21 @@ void ProblemData::depotRouter() {
 		std::cout << "Ajout de routeur no " << getNbRouters() << " : " << potentielValue << std::endl;
 #endif 
 		//Ajout des cables
+		std::vector<Point> newCables;
 		for (auto &cable : linkCables) {
 			if (find(cables.begin(), cables.end(), cable) == cables.end()) {//newCable UNIQUE !!!
 				cables.push_back(cable);
+				newCables.push_back(cable);
 			}
 		}
 
 		//update de la map de solution cable apres que l'on est mis les cables à jour
 		for (int x = 0; x < mapSearchCab.size(); x++) {
 			for (int y = 0; y < mapSearchCab[x].size(); y++) {
-				mapSearchCab[x][y] = distance(x, y);//amélioration en passant seulement newCable UNIQUE !!!
+				value = distanceNewCables(x, y, newCables);//amélioration en passant seulement newCable UNIQUE !!!
+				if (value < mapSearchCab[x][y]) {
+					mapSearchCab[x][y] = value;
+				}
 			}
 		}
 #ifdef DEBUG
