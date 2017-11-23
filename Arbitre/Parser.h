@@ -30,7 +30,7 @@ public:
 	bool isRouterCoveringCell(int ptAx, int ptAy, int ptBx, int ptBy) const;
 
 	bool areRoutersConnectedToBackbone();
-	bool areRoutersInWalls() const;
+	bool areRoutersNotInWalls() const;
 	bool isBudgetRespected();
 	bool areAllRulesRespected();
 	int computeScore() const;

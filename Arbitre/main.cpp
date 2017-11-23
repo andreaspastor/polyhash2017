@@ -117,7 +117,8 @@ int main(int argc, char *argv[])
 		resultFile = argv[2];
 	}
 
-	compareSolutions(directory, resultFile);
+	isSolutionValid("charleston_road.in", "charlestonResult.txt");
+	//compareSolutions(directory, resultFile);
 
 	system("pause");
 

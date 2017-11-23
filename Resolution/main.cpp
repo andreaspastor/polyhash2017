@@ -32,8 +32,8 @@ int main(int argc, char *argv[])
 		output = argv[2];
 	}
 	else {
-		input = "charleston_road.in"; //lets_go_higher, rue_de_londres, opera
-		output = "charlestonResult.txt";
+		input = "opera.in"; //lets_go_higher, rue_de_londres, opera
+		output = "operaResult.txt";
 	}
 
 	//parseArgs(argc);

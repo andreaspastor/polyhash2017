@@ -185,10 +185,12 @@ bool Parser::areRoutersConnectedToBackbone(){
 
 //Check if routers are in walls or not
 //Return 1 if true, 0 otherwise
-bool Parser::areRoutersInWalls() const {
+bool Parser::areRoutersNotInWalls() const {
 	//Check for each routers if his coordonnates are walls or not
 	for (auto &router : routers) {
-		if (map[router.getCoordX()][router.getCoordY()].getType() == MUR) return false;
+		if (map[router.getCoordX()][router.getCoordY()].getType() == MUR) {
+			return false;
+		}
 	}
 
 	return true;
@@ -205,7 +207,15 @@ bool Parser::isBudgetRespected(){
 }
 
 bool Parser::areAllRulesRespected(){
-	return (isBudgetRespected() && !areRoutersInWalls() && areRoutersConnectedToBackbone());
+	if (isBudgetRespected()) {
+		if (areRoutersNotInWalls()) {
+			if (areRoutersConnectedToBackbone()) {
+				return true;
+			}
+		}
+	}
+	return false;
+	//return (isBudgetRespected() && !areRoutersInWalls() && areRoutersConnectedToBackbone());
 }
 
 bool Parser::isRouterCoveringCell(int ptAx, int ptAy, int ptBx, int ptBy) const{
@@ -230,7 +240,7 @@ void Parser::coverCellsMap(){
 		for (int x = -range; x <= range; x++) {
 			for (int y = -range; y <= range; y++) {
 				if (isRouterCoveringCell(router.getCoordX(), router.getCoordY(), router.getCoordX() + x, router.getCoordY() + y)) {
-					if (map[router.getCoordX() + x][router.getCoordY() + y].getType() != COVERED) {
+					if (map[router.getCoordX() + x][router.getCoordY() + y].getType() == TARGET) {
 						map[router.getCoordX() + x][router.getCoordY() + y].setType(COVERED);
 						realNumberOfCellsConnected++;
 					}
