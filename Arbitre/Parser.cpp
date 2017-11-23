@@ -101,7 +101,7 @@ void Parser::ParseAnswer(const char* filename) {
 			result.push_back(s);
 
 		//Add the point for future tests
-		cells.push_back(Point(stoi(result[0]), stoi(result[1]), VIDE));
+		cells.push_back(Point(stoi(result[0]), stoi(result[1]), CABLE));
 		currentRow += 1;
 	}
 
@@ -123,7 +123,7 @@ void Parser::ParseAnswer(const char* filename) {
 			result.push_back(s);
 
 		//Add
-		routers.push_back(Point(stoi(result[0]), stoi(result[1]), VIDE));
+		routers.push_back(Point(stoi(result[0]), stoi(result[1]), ROUTER));
 		currentRow += 1;
 	}
 	file.close();
@@ -160,7 +160,7 @@ bool Parser::areRoutersConnectedToBackbone(){
 				if (getPointMapSolution(fil.getCoordX()+i, fil.getCoordY()+j).getType() == CABLE) {
 					//Si un de ses voisins est un cable, on l'ajoute dans la map solution
 					founded = true;
-					getPointMapSolution(fil.getCoordX()+i, fil.getCoordY()+j).setType(CABLE);
+					setPointMapSolution(fil);
 					break;
 				}
 			}
@@ -179,7 +179,7 @@ bool Parser::areRoutersConnectedToBackbone(){
 			return false;
 		}
 	}
-
+	coverCellsMap();
 	return true;
 }
 
@@ -252,5 +252,5 @@ void Parser::coverCellsMap(){
 
 int Parser::computeScore() const {
 	
-	return 1000 * realNumberOfCellsConnected + budgetCalculated;
+	return 1000 * realNumberOfCellsConnected + (maxBudget - budgetCalculated);
 }

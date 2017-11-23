@@ -56,6 +56,7 @@ protected:
 	std::vector<std::vector<double>> mapSearchCab;
 	std::vector<Point> routers;
 	std::vector<Point> cables;
+	std::vector<Point> cablesSorted;
 };
 
 void sorting(const std::vector<Point> & listeRef, std::vector<Point> & liste, const Point & ptCentre);

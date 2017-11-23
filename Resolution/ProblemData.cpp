@@ -86,14 +86,13 @@ void ProblemData::dumpInFile(const char * filename)
 	std::ofstream monFlux(("..\\Output\\" + std::string(filename)));
 	
 	if (monFlux) {
-		monFlux << cables.size() << std::endl;
-		for (auto &pt : cables) {
+		monFlux << cablesSorted.size() << std::endl;
+		for (auto &pt : cablesSorted) {
 			monFlux << pt.getCoordX() << " " << pt.getCoordY() << std::endl;
 		}
-		// -1 car le premier point dans la liste est le backbone
-		monFlux << routers.size() - 1 << std::endl;
-		for (int x = 0; x < routers.size(); x++) {
-			monFlux << routers[x].getCoordX() << " " << routers[x].getCoordY() << std::endl;
+		monFlux << routers.size() << std::endl;
+		for (auto &router : routers) {
+			monFlux << router.getCoordX() << " " << router.getCoordY() << std::endl;
 		}
 	}
 	monFlux.close();
@@ -228,6 +227,7 @@ void ProblemData::depotRouter() {
 		}
 		plusProcheCable = maxPotentiel.closestCable(cables);
 		std::vector<Point> linkCables = maxPotentiel.getCablesToB(plusProcheCable);
+		linkCables.push_back(Point(maxPotentiel.getCoordX(), maxPotentiel.getCoordY(), CABLE));
 		maxBudget -= linkCables.size() * connectPrice;
 		
 		maxBudget -= routerPrice;
@@ -282,11 +282,10 @@ void ProblemData::depotRouter() {
 	
 
 	std::cout << "Sorting des cables" << std::endl;
-	std::vector<Point> listCablesSorted;
 	Point backbone(backboneRow, backboneCol, CABLE);
 	//suppression du point backbone avant de sort, il avait été utile pour trouver le plus court distance router cable
 	cables.erase(cables.begin());
-	sorting(cables, listCablesSorted, backbone);
+	sorting(cables, cablesSorted, backbone);
 
 	/*for (int x = routerRange; x < row; x += (2 * routerRange + 1)) {
 		for (int y = routerRange; y < col; y += (2 * routerRange + 1)) {

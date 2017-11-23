@@ -59,6 +59,7 @@ bool isSolutionValid(const char *rule, const char *solution) {
 		return false;
 	}
 	else {
+		cout << parser.computeScore() << endl;
 		return true;
 	}
 }
