@@ -151,6 +151,7 @@ void Parser::setPointMapSolution(const Point & p)
 bool Parser::areRoutersConnectedToBackbone(){
 	bool founded = false;
 	initialiseMapSolution();
+	coverCellsMap();
 	getPointMapSolution(getBackboneRow(),getBackboneCol()).setType(CABLE);
 	for (auto& fil : cells){
 		//Pour chaque cable, on parcours ses 8 voisins
@@ -179,7 +180,6 @@ bool Parser::areRoutersConnectedToBackbone(){
 			return false;
 		}
 	}
-	coverCellsMap();
 	return true;
 }
 

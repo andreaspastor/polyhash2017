@@ -128,8 +128,8 @@ void dump(const char* filename, std::vector<Point> routers) {
 	return routers;
 }*/
 
-int ProblemData::potentielWifi(int x , int y) const {
-	int score = 0;
+long ProblemData::potentielWifi(int x , int y) const {
+	long score = 0;
 	for (int i = -routerRange; i <= routerRange; i += 1) {
 		for (int j = -routerRange; j <= routerRange; j += 1) {
 			if (x + i > -1 && y + j > -1 && x + i < row && y + j < col) {
@@ -172,8 +172,6 @@ int ProblemData::distanceNewCables(int x, int y, const std::vector<Point> & newC
 }
 
 void ProblemData::depotRouter() {
-	//ajout du backbone car besoin dans le graphe couvrant
-	routers.push_back(Point(backboneRow, backboneCol, CABLE));
 	cables.push_back(Point(backboneRow, backboneCol, CABLE)); //pour le parcours de la mesure de distance au depot du premier router
 
 	Point maxPotentiel;

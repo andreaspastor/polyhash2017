@@ -16,7 +16,7 @@ public:
 
 	void ParseFile(const char* filename);
 	void dumpInFile(const char* filename);
-	int potentielWifi(int x, int y) const;
+	long potentielWifi(int x, int y) const;
 	int distance(int x, int y) const;
 	int distanceNewCables(int x, int y, const std::vector<Point>& newCables) const;
 	void depotRouter();
