@@ -18,7 +18,7 @@ ProblemData::~ProblemData()
 
 void ProblemData::ParseFile(const char * filename)
 {
-	std::ifstream file("..\\Input\\" + std::string(filename));
+	std::ifstream file(filename);
 	if (!file) {
 		std::cerr << "Ce fichier n'existe pas !" << std::endl;
 		exit(-1);
@@ -43,13 +43,13 @@ void ProblemData::ParseFile(const char * filename)
 	backboneCol = std::stoi(line);
 
 	file.ignore();
-	
+
 	unsigned int currentRow = 0;
 	while (currentRow < row) {
 		std::getline(file, line);
 		mapEntree.push_back(std::vector<Point>());
 		mapSortie.push_back(std::vector<Point>());
-		for (unsigned int currentCol = 0; currentCol < line.size(); currentCol ++) {
+		for (unsigned int currentCol = 0; currentCol < line.size(); currentCol++) {
 			switch (line[currentCol]) {
 			case '#':
 				mapEntree[currentRow].push_back(Point(currentRow, currentCol, MUR));
@@ -83,8 +83,8 @@ void ProblemData::ParseFile(const char * filename)
 void ProblemData::dumpInFile(const char * filename)
 {
 
-	std::ofstream monFlux(("..\\Output\\" + std::string(filename)));
-	
+	std::ofstream monFlux(filename);
+
 	if (monFlux) {
 		monFlux << cablesSorted.size() << std::endl;
 		for (auto &pt : cablesSorted) {
@@ -114,21 +114,21 @@ void dump(const char* filename, std::vector<Point> routers) {
 }
 //Premier solution de dépot de routers
 /*vector<Point> ProblemData::depotRouter() {
-	vector<Point> routers;
-	//ajout du backbone car besoin dans le graphe couvrant
-	routers.push_back(Point(backboneRow, backboneCol, CABLE));
+vector<Point> routers;
+//ajout du backbone car besoin dans le graphe couvrant
+routers.push_back(Point(backboneRow, backboneCol, CABLE));
 
-	for (int x = routerRange; x < row; x += (2 * routerRange + 1)) {
-		for (int y = routerRange; y < col; y += (2 * routerRange + 1)) {
-			if (mapEntree[x][y].getType() == TARGET) {
-				routers.push_back(Point(x, y, ROUTER));
-			}
-		}
-	}
-	return routers;
+for (int x = routerRange; x < row; x += (2 * routerRange + 1)) {
+for (int y = routerRange; y < col; y += (2 * routerRange + 1)) {
+if (mapEntree[x][y].getType() == TARGET) {
+routers.push_back(Point(x, y, ROUTER));
+}
+}
+}
+return routers;
 }*/
 
-long ProblemData::potentielWifi(int x , int y) const {
+long ProblemData::potentielWifi(int x, int y) const {
 	long score = 0;
 	for (int i = -routerRange; i <= routerRange; i += 1) {
 		for (int j = -routerRange; j <= routerRange; j += 1) {
@@ -137,13 +137,13 @@ long ProblemData::potentielWifi(int x , int y) const {
 					score += 1000;
 				}
 			}
-			
+
 		}
 	}
 	return score;
 }
 
-int ProblemData::distance(int x, int y) const{
+int ProblemData::distance(int x, int y) const {
 	int xx, yy, dist;
 	int minDist = 9999;
 	for (auto &cable : cables) {
@@ -209,13 +209,13 @@ void ProblemData::depotRouter() {
 			}
 		}
 		/*for (int x = routerRange; x < row - routerRange; x += 5) {
-			for (int y = routerRange; y < col - routerRange; y += 5) {
-				value = potentielWifi(x, y) - distance(x, y);
-				if (value > potentielValue) {
-					maxPotentiel = Point(x, y, ROUTER);
-					potentielValue = value;
-				}
-			}
+		for (int y = routerRange; y < col - routerRange; y += 5) {
+		value = potentielWifi(x, y) - distance(x, y);
+		if (value > potentielValue) {
+		maxPotentiel = Point(x, y, ROUTER);
+		potentielValue = value;
+		}
+		}
 		}*/
 
 		//Ajout du router
@@ -227,9 +227,9 @@ void ProblemData::depotRouter() {
 		std::vector<Point> linkCables = maxPotentiel.getCablesToB(plusProcheCable);
 		linkCables.push_back(Point(maxPotentiel.getCoordX(), maxPotentiel.getCoordY(), CABLE));
 		maxBudget -= linkCables.size() * connectPrice;
-		
+
 		maxBudget -= routerPrice;
-		
+
 		if (maxBudget < 0) {
 			break;
 		}
@@ -245,8 +245,8 @@ void ProblemData::depotRouter() {
 		}
 
 		//update de la map de solution couverture wifi après avoir update la couverture
-		for (int x = -2*routerRange; x <= 2*routerRange; x++) {
-			for (int y = -2*routerRange; y <= 2*routerRange; y++) {
+		for (int x = -2 * routerRange; x <= 2 * routerRange; x++) {
+			for (int y = -2 * routerRange; y <= 2 * routerRange; y++) {
 				mapSearchCov[maxPotentiel.getCoordX() + x][maxPotentiel.getCoordY() + y] = potentielWifi(maxPotentiel.getCoordX() + x, maxPotentiel.getCoordY() + y);
 			}
 		}
@@ -276,8 +276,8 @@ void ProblemData::depotRouter() {
 		std::cout << "Budget restant de " << maxBudget << " euros." << std::endl;
 #endif 
 	}
-	
-	
+
+
 
 	std::cout << "Sorting des cables" << std::endl;
 	Point backbone(backboneRow, backboneCol, CABLE);
@@ -286,11 +286,11 @@ void ProblemData::depotRouter() {
 	sorting(cables, cablesSorted, backbone);
 
 	/*for (int x = routerRange; x < row; x += (2 * routerRange + 1)) {
-		for (int y = routerRange; y < col; y += (2 * routerRange + 1)) {
-			if (map[x][y].getType() == TARGET) {
-				routers.push_back(Point(x, y, ROUTER));
-			}
-		}
+	for (int y = routerRange; y < col; y += (2 * routerRange + 1)) {
+	if (map[x][y].getType() == TARGET) {
+	routers.push_back(Point(x, y, ROUTER));
+	}
+	}
 	}*/
 }
 
@@ -313,12 +313,12 @@ std::vector<Point> ProblemData::getRepartition(const std::vector<int> & parent)
 #endif 
 
 	std::vector<Point> listCablesSorted;
-	
+
 	sorting(cables, listCablesSorted, backbone);
 	return listCablesSorted;
 }
 
-void sorting(const std::vector<Point> & listeRef, std::vector<Point> & liste, const Point & ptCentre) 
+void sorting(const std::vector<Point> & listeRef, std::vector<Point> & liste, const Point & ptCentre)
 {
 	for (auto &pt : listeRef) {
 		if (pt.voisinDe(ptCentre) && find(liste.begin(), liste.end(), pt) == liste.end()) {
@@ -365,7 +365,7 @@ long ProblemData::scoreRouters() {
 	for (auto &router : routers) {
 		for (int x = -routerRange; x <= routerRange; x++) {
 			for (int y = -routerRange; y <= routerRange; y++) {
-				if (mapSortie[router.getCoordX() + x] [router.getCoordY() + y].getType() != COVERED && isCover(router, mapEntree[router.getCoordX() + x][router.getCoordY() + y])) {
+				if (mapSortie[router.getCoordX() + x][router.getCoordY() + y].getType() != COVERED && isCover(router, mapEntree[router.getCoordX() + x][router.getCoordY() + y])) {
 					score += 1000;
 					mapSortie[router.getCoordX() + x][router.getCoordY() + y].setType(COVERED);//Besoin de dire COVERED pour eviter de compter 2 fois la meme cellule
 				}
@@ -378,7 +378,7 @@ long ProblemData::scoreRouters() {
 long ProblemData::calculMaxMoney() const
 {
 	long somme = 0;
-	for (auto &x: mapEntree) {
+	for (auto &x : mapEntree) {
 		for (auto &y : x) {
 			if (y.getType() == TARGET)
 			{

@@ -3,7 +3,7 @@
 #include <ctime>
 #include <chrono>
 #include <vector>
-#include <Windows.h>
+#include <windows.h>
 #include <vector>
 #include "Parser.h"
 #include "FileHandling.hpp"
@@ -35,7 +35,7 @@ double timeSolution(string &executable, string &input, string &strategy) {
 
 void dumpResults(string &fileName, const vector<pair<string, double>> &results) {
 	
-	ofstream monFlux("..\\Output\\" + fileName);
+	ofstream monFlux(fileName + ".out");
 
 	if (!monFlux) {
 		cerr << "Impossible de creer le fichier : " << fileName << endl;
@@ -50,8 +50,8 @@ void dumpResults(string &fileName, const vector<pair<string, double>> &results) 
 
 bool isSolutionValid(const char *rule, const char *solution) {
 	Parser parser;
-	parser.ParseRule(("..\\Input\\" + string(rule)).c_str());
-	parser.ParseAnswer(("..\\Output\\" + string(solution)).c_str());
+	parser.ParseRule((string(rule)).c_str());
+	parser.ParseAnswer((string(solution)).c_str());
 
 	if (!parser.areAllRulesRespected()) {
 		cout << "L'arbitre a invalide le test, fin de l'evaluation de la solution" << endl;
@@ -66,7 +66,7 @@ bool isSolutionValid(const char *rule, const char *solution) {
 
 void compareSolutions(const char *directory, const char *resultFile) {
 
-	std::vector<std::string> entries = { "rue_de_londres.in", "charleston_road.in", "opera.in", "lets_go_higher.in" };
+	std::vector<std::string> entries = { "charleston_road.in", "rue_de_londres.in", "opera.in", "lets_go_higher.in" };
 
 	std::string fileName;
 	vector<pair<string, double>> results;
@@ -85,7 +85,7 @@ void compareSolutions(const char *directory, const char *resultFile) {
 		double duration = 0;
 		if (extension == ".exe") {
 			for (auto entry : entries) {
-				string output = fileName.substr(0, fileName.length() - 4) + "_" + entry;
+				string output = fileName.substr(0, fileName.length() - 4) + "_" + entry.substr(0, entry.length()-3) + ".out";
 				string command = path + " " + entry + " " + output;
 				duration += timeSolution(command, entry, fileName);
 				
@@ -112,15 +112,15 @@ int main(int argc, char *argv[])
 	if (argc != 3) {
 		//Defaut settings, only for tests
 		directory = "..\\Strategies";
-		resultFile = "timing_results.txt";
+		resultFile = "timing_results.out";
 	}
 	else {
 		directory = argv[1];
 		resultFile = argv[2];
 	}
 
-	isSolutionValid("charleston_road.in", "charlestonResult.txt");
-	//compareSolutions(directory, resultFile);
+	//isSolutionValid("charleston_road.in", "charlestonResult.txt");
+	compareSolutions(directory, resultFile);
 
 
 #ifdef DEBUG

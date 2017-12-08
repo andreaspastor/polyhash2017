@@ -3,7 +3,6 @@
 #include <string>
 #include <vector>
 #include <cmath>
-
 #include "Point.h"
 #include "ProblemData.h"
 #include "Object.h"
@@ -17,7 +16,7 @@ void parseArgs(int argc)
 {
 	if (argc != 3) {
 		std::cerr << "Mauvais nombre d'arguments !" << std::endl;
-		std::exit(-1);
+		exit(-1);
 	}
 }
 
@@ -33,7 +32,7 @@ int main(int argc, char *argv[])
 	}
 	else {
 		input = "lets_go_higher.in"; //lets_go_higher, rue_de_londres, opera
-		output = "higherResult.txt";
+		output = "higherResult.out";
 	}
 
 	//parseArgs(argc);
