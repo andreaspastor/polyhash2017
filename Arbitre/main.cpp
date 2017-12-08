@@ -55,9 +55,11 @@ bool isSolutionValid(const char *rule, const char *solution) {
 
 	if (!parser.areAllRulesRespected()) {
 		cout << "L'arbitre a invalide le test, fin de l'evaluation de la solution" << endl;
+		cout << parser.computeScore() << endl;
 		return false;
 	}
 	else {
+		cout << parser.computeScore() << endl;
 		return true;
 	}
 }
@@ -117,9 +119,9 @@ int main(int argc, char *argv[])
 		resultFile = argv[2];
 	}
 
-	compareSolutions(directory, resultFile);
+	isSolutionValid("charleston_road.in", "charlestonResult.txt");
+	//compareSolutions(directory, resultFile);
 
-	system("pause");
 
 #ifdef DEBUG
 

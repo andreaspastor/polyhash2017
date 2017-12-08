@@ -101,7 +101,7 @@ void Parser::ParseAnswer(const char* filename) {
 			result.push_back(s);
 
 		//Add the point for future tests
-		cells.push_back(Point(stoi(result[0]), stoi(result[1]), VIDE));
+		cells.push_back(Point(stoi(result[0]), stoi(result[1]), CABLE));
 		currentRow += 1;
 	}
 
@@ -123,22 +123,74 @@ void Parser::ParseAnswer(const char* filename) {
 			result.push_back(s);
 
 		//Add
-		routers.push_back(Point(stoi(result[0]), stoi(result[1]), VIDE));
+		routers.push_back(Point(stoi(result[0]), stoi(result[1]), ROUTER));
 		currentRow += 1;
 	}
 	file.close();
 }
 
-bool Parser::areRoutersConnectedToBackbone() const {
+void Parser::initialiseMapSolution()
+{
+	for (int i = 0; i < row; i++) {
+		for (int j = 0; j < col; j++) {
+			setPointMapSolution(Point(i, j, VIDE));
+		}
+	}
+}
+
+Point & Parser::getPointMapSolution(unsigned int x, unsigned int y)
+{
+	return map_solution[std::pair<unsigned int, unsigned int>(x,y)];
+}
+
+void Parser::setPointMapSolution(const Point & p)
+{
+	map_solution[std::make_pair(p.getCoordX(), p.getCoordY())] = p;
+}
+
+bool Parser::areRoutersConnectedToBackbone(){
+	bool founded = false;
+	initialiseMapSolution();
+	coverCellsMap();
+	getPointMapSolution(getBackboneRow(),getBackboneCol()).setType(CABLE);
+	for (auto& fil : cells){
+		//Pour chaque cable, on parcours ses 8 voisins
+		//Et on vérifie qu'au moins 1 d'entre eux est un cable
+		for (int i = -1; i < 2; i++) {
+			for (int j = -1; j < 2; j++) {
+				if (getPointMapSolution(fil.getCoordX()+i, fil.getCoordY()+j).getType() == CABLE) {
+					//Si un de ses voisins est un cable, on l'ajoute dans la map solution
+					founded = true;
+					setPointMapSolution(fil);
+					break;
+				}
+			}
+			if (founded) {
+				break;
+			}
+		}
+		if (!founded) {
+			return false;
+		}
+		founded = false;
+	}
+
+	for (auto &router : routers) {
+		if (getPointMapSolution(router.getCoordX(), router.getCoordY()).getType() != CABLE) {
+			return false;
+		}
+	}
 	return true;
 }
 
 //Check if routers are in walls or not
 //Return 1 if true, 0 otherwise
-bool Parser::areRoutersInWalls() const {
+bool Parser::areRoutersNotInWalls() const {
 	//Check for each routers if his coordonnates are walls or not
 	for (auto &router : routers) {
-		if (map[router.getCoordX()][router.getCoordY()].getType() == MUR) return false;
+		if (map[router.getCoordX()][router.getCoordY()].getType() == MUR) {
+			return false;
+		}
 	}
 
 	return true;
@@ -146,19 +198,59 @@ bool Parser::areRoutersInWalls() const {
 
 //Check if budget is respected (budged <= maxBudget)
 //Return bool (0 if not respected)
-bool Parser::isBudgetRespected() const {
-	int budgetCalculated = numberOfCellsConnected * connectPrice + numberOfRouters * routerPrice;
+bool Parser::isBudgetRespected(){
+	budgetCalculated = numberOfCellsConnected * connectPrice + numberOfRouters * routerPrice;
 #ifdef DEBUG
 	cout << "Budget max: " << maxBudget << " | " << "Calculated budget: " << budgetCalculated << endl;
 #endif
 	return budgetCalculated <= maxBudget;
 }
 
-bool Parser::areAllRulesRespected() const {
-	return (isBudgetRespected() && !areRoutersInWalls() && areRoutersConnectedToBackbone());
+bool Parser::areAllRulesRespected(){
+	if (isBudgetRespected()) {
+		if (areRoutersNotInWalls()) {
+			if (areRoutersConnectedToBackbone()) {
+				return true;
+			}
+		}
+	}
+	return false;
+	//return (isBudgetRespected() && !areRoutersInWalls() && areRoutersConnectedToBackbone());
+}
+
+bool Parser::isRouterCoveringCell(int ptAx, int ptAy, int ptBx, int ptBy) const{
+	int xmin = fmin(ptAx, ptBx);
+	int xmax = fmax(ptAx, ptBx);
+	int ymin = fmin(ptAy, ptBy);
+	int ymax = fmax(ptAy, ptBy);
+	for (int x = xmin; x <= xmax; x++) {
+		for (int y = ymin; y <= ymax; y++) {
+			if (map[x][y].getType() == MUR) {
+				return false;
+			}
+		}
+	}
+	return true;
+}
+
+void Parser::coverCellsMap(){
+	realNumberOfCellsConnected = 0;
+	int range = routerRange;
+	for (auto &router : routers) {
+		for (int x = -range; x <= range; x++) {
+			for (int y = -range; y <= range; y++) {
+				if (isRouterCoveringCell(router.getCoordX(), router.getCoordY(), router.getCoordX() + x, router.getCoordY() + y)) {
+					if (map[router.getCoordX() + x][router.getCoordY() + y].getType() == TARGET) {
+						map[router.getCoordX() + x][router.getCoordY() + y].setType(COVERED);
+						realNumberOfCellsConnected++;
+					}
+				}
+			}
+		}
+	}
 }
 
 int Parser::computeScore() const {
-	return 0;
+	
+	return 1000 * realNumberOfCellsConnected + (maxBudget - budgetCalculated);
 }
-

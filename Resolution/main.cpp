@@ -9,7 +9,7 @@
 #include "Object.h"
 #include "Graph.h"
 
-//#define DEBUG
+#define DEBUG
 
 
 
@@ -32,8 +32,8 @@ int main(int argc, char *argv[])
 		output = argv[2];
 	}
 	else {
-		input = "charleston_road.in";
-		output = "results.txt";
+		input = "lets_go_higher.in"; //lets_go_higher, rue_de_londres, opera
+		output = "higherResult.txt";
 	}
 
 	//parseArgs(argc);
@@ -47,7 +47,7 @@ int main(int argc, char *argv[])
 	std::cout << "Nombres de points à disposition sur la carte : " << data.calculMaxMoney() << std::endl;
 #endif 
 	
-
+	std::cout << "Debut du depot des routeurs" << std::endl;
 	data.depotRouter();
 	long scoreCellsCovered = data.scoreRouters();
 
@@ -63,10 +63,10 @@ int main(int argc, char *argv[])
 		cout << liste[f].getCoordX() << " - " << liste[f].getCoordY() << endl;
 	}*/
 	
-	Graph cables = Graph(data.getRouters());
+	/*Graph cables = Graph(data.getRouters());
 	cables.resolve();
 	
-	std::vector<Point> listCables = data.getRepartition(cables.parent);
+	std::vector<Point> listCables = data.getRepartition(cables.parent);*/
 	data.dumpInFile(output);
 	return 0;
 }
