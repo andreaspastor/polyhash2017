@@ -5,7 +5,6 @@
 #include <algorithm>
 #include <cmath>
 
-#define DEBUG
 
 ProblemData::ProblemData()
 {
@@ -75,6 +74,7 @@ void ProblemData::ParseFile(const char * filename)
 		currentRow += 1;
 	}
 	file.close();
+
 #ifdef DEBUG
 	std::cout << mapEntree[0][0] << std::endl;
 #endif
@@ -130,6 +130,10 @@ return routers;
 
 long ProblemData::potentielWifi(int x, int y) const {
 	long score = 0;
+	if (x == backboneRow && y == backboneRow) {
+		return 0;
+	}
+
 	for (int i = -routerRange; i <= routerRange; i += 1) {
 		for (int j = -routerRange; j <= routerRange; j += 1) {
 			if (x + i > -1 && y + j > -1 && x + i < row && y + j < col) {
@@ -184,7 +188,7 @@ void ProblemData::depotRouter() {
 	for (int x = 0; x < row; x++) {
 		mapSearchCab.push_back(std::vector<double>());
 		mapSearchCov.push_back(std::vector<double>());
-		std::cout << x << " / " << row << std::endl;
+		//std::cout << x << " / " << row << std::endl;
 		for (int y = 0; y < col; y++) {
 			mapSearchCov[x].push_back(potentielWifi(x, y));
 			mapSearchCab[x].push_back(distance(x, y));
@@ -224,7 +228,8 @@ void ProblemData::depotRouter() {
 			break;
 		}
 		plusProcheCable = maxPotentiel.closestCable(cables);
-		std::vector<Point> linkCables = maxPotentiel.getCablesToB(plusProcheCable);
+		//std::vector<Point> linkCables = maxPotentiel.getCablesToB(plusProcheCable);
+		std::vector<Point> linkCables = maxPotentiel.getCablesDiagTo(plusProcheCable);
 		linkCables.push_back(Point(maxPotentiel.getCoordX(), maxPotentiel.getCoordY(), CABLE));
 		maxBudget -= linkCables.size() * connectPrice;
 
@@ -301,7 +306,8 @@ std::vector<Point> ProblemData::getRepartition(const std::vector<int> & parent)
 	for (int x = 1; x < parent.size(); x++) {
 		Point routerA = routers[x];
 		Point routerB = routers[parent[x]];
-		std::vector<Point> linkCables = routerA.getCablesToB(routerB);
+		//std::vector<Point> linkCables = routerA.getCablesToB(routerB);
+		std::vector<Point> linkCables = routerA.getCablesDiagTo(routerB);
 		for (auto &cable : linkCables) {
 			if (find(cables.begin(), cables.end(), cable) == cables.end()) {
 				cables.push_back(cable);

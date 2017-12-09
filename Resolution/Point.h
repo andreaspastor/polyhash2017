@@ -13,6 +13,7 @@ public:
 
 	unsigned int distance(const Point &B) const;
 	std::vector<Point> getCablesToB(const Point & ptB) const;
+	std::vector<Point> getCablesDiagTo(const Point & ptB) const;
 	bool voisinDe(const Point & ptB) const;
 	Point closestCable(const std::vector<Point> & listCables) const;
 

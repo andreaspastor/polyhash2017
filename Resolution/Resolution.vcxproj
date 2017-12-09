@@ -120,7 +120,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Graph.h" />
-    <ClInclude Include="main.h" />
     <ClInclude Include="Object.h" />
     <ClInclude Include="Point.h" />
     <ClInclude Include="ProblemData.h" />

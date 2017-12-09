@@ -1,5 +1,6 @@
 #include "Point.h"
 #include <cmath>
+#include <iostream>
 
 
 Point::Point()
@@ -44,6 +45,85 @@ std::vector<Point> Point::getCablesToB(const Point &ptB) const
 	for (int j = nbVertical - 1; j >= 0; j--) {
 		listCables.push_back(Point(ptB.coordX - j * signX * axeX, ptB.coordY - j * signY * axeY, CABLE));
 	}
+	return listCables;
+}
+
+std::vector<Point> Point::getCablesDiagTo(const Point & ptB) const
+{
+	std::vector<Point> listCables;
+	listCables.push_back(Point(coordX, coordY, CABLE));
+	int x; //variable de parcours
+	int direction;
+	int x1 = coordX;
+	int y1 = coordY;
+	int x2 = ptB.coordX;
+	int y2 = ptB.coordY;
+
+	if (x1 != x2) { // ABSCISSES DIFFERENTES
+		int a1 = -1;
+		int b1 = y1 - a1 * x1;
+		int a2 = 1;
+		int b2 = y2 - a2 * x2;
+		direction = x1 < x2 ? 1 : -1;
+
+		//diagonales directes
+		if (a1*x2 + b1 == y2) {
+			x = x1 + direction;
+			while (x != x2) {
+				listCables.push_back(Point(x, a1*x + b1, CABLE));
+				x = x + direction;
+			}
+		}
+		else if (a2*x1 + b2 == y1) {
+			x = x1 + direction;
+			while (x != x2) {
+				listCables.push_back(Point(x, a2*x + b2, CABLE));
+				x = x + direction;
+			}
+		}
+		else {
+			int b1test = y1 + a1*x1;
+			direction = y2 > x2 + b1test ? -1 : 1;
+			if (std::abs(x1 - x2) % 2 != std::abs(y1 - y2) % 2) {
+				x1 = x1 + direction;
+				listCables.push_back(Point(x1, y1, CABLE));
+				b1 = y1 - a1*x1;
+			}
+			bool findIntersec = false;
+			x = x1;
+			while (a1*x + b1 != a2*x + b2) {
+				listCables.push_back(Point(x, a1*x + b1, CABLE));
+				x = x + direction;
+			}
+			direction = x < x2 ? 1 : -1;
+			while (x != x2) {
+				listCables.push_back(Point(x, a2*x + b2, CABLE));
+				x = x + direction;
+			}
+		}
+	}
+	else { // MEME ABSCISSES
+		int diff = std::abs(y1 - y2);
+		int nbDiag = diff / 2;
+		direction = y1 < y2 ? 1 : -1;
+		for (int i = 0; i < nbDiag; i++) {
+			x1 = x1 + direction;
+			y1 = y1 + direction;
+			listCables.push_back(Point(x1, y1, CABLE));
+		}
+		
+		if (diff % 2 == 1) {
+			y1 = y1 + direction;
+			listCables.push_back(Point(x1, y1, CABLE));
+		}
+
+		for (int i = 0; i < nbDiag; i++) {
+			x1 = x1 - direction;
+			y1 = y1 + direction;
+			listCables.push_back(Point(x1, y1, CABLE));
+		}
+	}
+
 	return listCables;
 }
 

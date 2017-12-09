@@ -38,9 +38,6 @@
     <ClInclude Include="Point.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
-    <ClInclude Include="main.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
     <ClInclude Include="Graph.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
