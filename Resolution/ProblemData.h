@@ -48,6 +48,7 @@ protected:
 	unsigned int connectPrice;
 	int routerPrice;
 	int maxBudget;
+	int maxBudgetInit;
 	int backboneRow;
 	int backboneCol;
 	std::vector<std::vector<Point>> mapEntree;

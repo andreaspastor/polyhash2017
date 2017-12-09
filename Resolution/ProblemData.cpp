@@ -39,6 +39,7 @@ void ProblemData::ParseFile(const char * filename)
 	routerPrice = std::stoi(line);
 	file >> line;
 	maxBudget = std::stoi(line);
+	maxBudgetInit = maxBudget;
 	file >> line;
 	backboneRow = std::stoi(line);
 	Point::backboneRow = backboneRow;
@@ -313,19 +314,89 @@ void ProblemData::depotRouter() {
 		}
 	}
 
+	int budgetRestant = maxBudgetInit - routers.size() * routerPrice - cables.size() * connectPrice;
+	std::cout << "BUDGET RESTANT : " << budgetRestant << std::endl;
+	maxBudget = budgetRestant;
+
+	// DEBUT CC
+	while (maxBudget > 0) {
+
+		//Remise à zero des valeurs
+		maxPotentiel = Point(0, 0, ROUTER);
+		plusProcheCable = Point(backboneRow, backboneCol, CABLE);
+		potentielValue = 0;//peut etre initialiser à la valeur du coût d'un routeur
+		distanceToCable = maxPotentiel.distance(plusProcheCable);
+
+		for (int x = 0; x < mapSearchCov.size(); x++) {
+			for (int y = 0; y < mapSearchCov[x].size(); y++) {
+				value = mapSearchCov[x][y] - mapSearchCab[x][y];
+				if (value > potentielValue && x != backboneRow && y != backboneCol) {
+					maxPotentiel = Point(x, y, ROUTER);
+					potentielValue = value;
+				}
+			}
+		}
+
+		//Ajout du router
+		if (potentielValue == 0) {
+			//Si l'on a pas reussi à trouver des points qui doivent prendre du wifi
+			break;
+		}
+		plusProcheCable = maxPotentiel.closestCable(cables);
+		//std::vector<Point> linkCables = maxPotentiel.getCablesToB(plusProcheCable);
+		std::vector<Point> linkCables = maxPotentiel.getCablesDiagTo(plusProcheCable);
+		linkCables.push_back(Point(maxPotentiel.getCoordX(), maxPotentiel.getCoordY(), CABLE));
+		maxBudget -= linkCables.size() * connectPrice;
+
+		maxBudget -= routerPrice;
+
+		if (maxBudget < 0) {
+			break;
+		}
+		routers.push_back(maxPotentiel);
+		routerSorted.insert(maxPotentiel);
+
+		//Modification de la map
+		for (int x = -routerRange; x <= routerRange; x++) {
+			for (int y = -routerRange; y <= routerRange; y++) {
+				if (isCover(maxPotentiel.getCoordX(), maxPotentiel.getCoordY(), maxPotentiel.getCoordX() + x, maxPotentiel.getCoordY() + y)) {
+					mapSortie[maxPotentiel.getCoordX() + x][maxPotentiel.getCoordY() + y].setType(COVERED);
+				}
+			}
+		}
+
+		//update de la map de solution couverture wifi après avoir update la couverture
+		for (int x = -2 * routerRange; x <= 2 * routerRange; x++) {
+			for (int y = -2 * routerRange; y <= 2 * routerRange; y++) {
+				mapSearchCov[maxPotentiel.getCoordX() + x][maxPotentiel.getCoordY() + y] = potentielWifi(maxPotentiel.getCoordX() + x, maxPotentiel.getCoordY() + y);
+			}
+		}
+
+		//Ajout des cables
+		std::vector<Point> newCables;
+		for (auto &cable : linkCables) {
+			if (find(cables.begin(), cables.end(), cable) == cables.end()) {//newCable UNIQUE !!!
+				cables.push_back(cable);
+				newCables.push_back(cable);
+			}
+		}
+
+		//update de la map de solution cable apres que l'on est mis les cables à jour
+		for (int x = 0; x < mapSearchCab.size(); x++) {
+			for (int y = 0; y < mapSearchCab[x].size(); y++) {
+				value = distanceNewCables(x, y, newCables);//amélioration en passant seulement newCable UNIQUE !!!
+				if (value < mapSearchCab[x][y]) {
+					mapSearchCab[x][y] = value;
+				}
+			}
+		}
+		//FIN CC
+	}
 	std::cout << "Sorting des cables" << std::endl;
 	Point backbone(backboneRow, backboneCol, CABLE);
 	//suppression du point backbone avant de sort, il avait été utile pour trouver le plus court distance router cable
 	cables.erase(cables.begin());
 	sorting(cables, cablesSorted, backbone);
-
-	/*for (int x = routerRange; x < row; x += (2 * routerRange + 1)) {
-	for (int y = routerRange; y < col; y += (2 * routerRange + 1)) {
-	if (map[x][y].getType() == TARGET) {
-	routers.push_back(Point(x, y, ROUTER));
-	}
-	}
-	}*/
 }
 
 std::vector<Point> ProblemData::getRepartition(const std::vector<int> & parent)
