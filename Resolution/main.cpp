@@ -30,8 +30,8 @@ int main(int argc, char *argv[])
 		output = argv[2];
 	}
 	else {
-		input = "rue_de_londres.in"; //lets_go_higher, rue_de_londres, opera
-		output = "rue_de_londres.out";
+		input = "opera.in"; //lets_go_higher, rue_de_londres, opera
+		output = "opera.out";
 	}
 
 	//parseArgs(argc);

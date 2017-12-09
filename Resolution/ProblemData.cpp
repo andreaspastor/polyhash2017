@@ -1,9 +1,12 @@
 #include "ProblemData.h"
+#include "Point.h"
 #include <fstream>
 #include <iostream>
 #include <string>
 #include <algorithm>
 #include <cmath>
+#include <set>
+#include <cassert>
 
 
 ProblemData::ProblemData()
@@ -38,8 +41,10 @@ void ProblemData::ParseFile(const char * filename)
 	maxBudget = std::stoi(line);
 	file >> line;
 	backboneRow = std::stoi(line);
+	Point::backboneRow = backboneRow;
 	file >> line;
 	backboneCol = std::stoi(line);
+	Point::backboneCol = backboneCol;
 
 	file.ignore();
 
@@ -184,6 +189,8 @@ void ProblemData::depotRouter() {
 	int distanceToCable;
 	int value = 0;
 
+	std::set<Point, CompPoint> routerSorted;
+
 	//initialisation mapRecherche
 	for (int x = 0; x < row; x++) {
 		mapSearchCab.push_back(std::vector<double>());
@@ -206,7 +213,7 @@ void ProblemData::depotRouter() {
 		for (int x = 0; x < mapSearchCov.size(); x++) {
 			for (int y = 0; y < mapSearchCov[x].size(); y++) {
 				value = mapSearchCov[x][y] - mapSearchCab[x][y];
-				if (value > potentielValue) {
+				if (value > potentielValue && x != backboneRow && y != backboneCol) {
 					maxPotentiel = Point(x, y, ROUTER);
 					potentielValue = value;
 				}
@@ -239,6 +246,10 @@ void ProblemData::depotRouter() {
 			break;
 		}
 		routers.push_back(maxPotentiel);
+		auto ret = routerSorted.insert(maxPotentiel);
+		if (ret.second == false) {
+			std::cout << maxPotentiel << std::endl;
+		}
 
 		//Modification de la map
 		for (int x = -routerRange; x <= routerRange; x++) {
@@ -282,7 +293,25 @@ void ProblemData::depotRouter() {
 #endif 
 	}
 
+	// drop des cables 
+	cables.clear();
+	
+	//Recablage a la fin
 
+	cables.push_back(Point(backboneRow, backboneCol, CABLE));
+	assert(routerSorted.size() == routers.size());
+	// 2 possibilités : utiliser les routeurs trié en fonction de leur distance au backbone ou juste dans l'ordre ou il ont été ajoutés
+	// pas l'air d'avoir beaucoup de différences ?
+	for (auto &router : routers) {
+		plusProcheCable = router.closestCable(cables);
+		std::vector<Point> link = router.getCablesDiagTo(plusProcheCable);
+		link.push_back(Point(router.getCoordX(), router.getCoordY(), CABLE));
+		for (auto &cable : link) {
+			if (find(cables.begin(), cables.end(), cable) == cables.end()) {//newCable UNIQUE !!!
+				cables.push_back(cable);
+			}
+		}
+	}
 
 	std::cout << "Sorting des cables" << std::endl;
 	Point backbone(backboneRow, backboneCol, CABLE);

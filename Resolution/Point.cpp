@@ -2,6 +2,8 @@
 #include <cmath>
 #include <iostream>
 
+int Point::backboneCol = 0;
+int Point::backboneRow = 0;
 
 Point::Point()
 {
@@ -51,7 +53,6 @@ std::vector<Point> Point::getCablesToB(const Point &ptB) const
 std::vector<Point> Point::getCablesDiagTo(const Point & ptB) const
 {
 	std::vector<Point> listCables;
-	listCables.push_back(Point(coordX, coordY, CABLE));
 	int x; //variable de parcours
 	int direction;
 	int x1 = coordX;

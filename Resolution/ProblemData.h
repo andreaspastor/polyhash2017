@@ -60,3 +60,12 @@ protected:
 };
 
 void sorting(const std::vector<Point> & listeRef, std::vector<Point> & liste, const Point & ptCentre);
+
+
+struct CompPoint {
+	bool operator() (const Point& lhs, const Point& rhs) const
+	{
+		Point backbone(Point::backboneRow, Point::backboneCol, VIDE);
+		return lhs.distance(backbone) <= rhs.distance(backbone);
+	}
+};

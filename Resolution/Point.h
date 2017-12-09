@@ -24,6 +24,9 @@ public:
 
 	friend bool operator==(Point const& ptA, Point const& ptB);
 	friend std::ostream& operator<<(std::ostream& os, const Point& p);
+
+	static int backboneRow;
+	static int backboneCol;
 protected:
 	int coordX;
 	int coordY;
