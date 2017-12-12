@@ -296,10 +296,49 @@ void ProblemData::depotRouter() {
 
 	// drop des cables 
 	cables.clear();
-	
+	std::vector<Point> routersCopy = routers;
+	std::vector<Point> routersCopy2;
 	//Recablage a la fin
-
-	cables.push_back(Point(backboneRow, backboneCol, CABLE));
+	Point backbonePt = Point(backboneRow, backboneCol, CABLE);
+	Point nextRouter = backbonePt.closestCable(routersCopy);
+	std::vector<Point> link = backbonePt.getCablesDiagTo(nextRouter);
+	link.push_back(Point(nextRouter.getCoordX(), nextRouter.getCoordY(), CABLE));//pas besoin d'ajouter le backbone dans la liste
+	for (auto &cable : link) {
+		if (find(cables.begin(), cables.end(), cable) == cables.end()) {//newCable UNIQUE !!!
+			cables.push_back(cable);
+		}
+	}
+	Point oldRouter = nextRouter;
+	Point routerA = backbonePt;
+	Point routerB = nextRouter;
+	routersCopy2.push_back(backbonePt);
+	routersCopy2.push_back(nextRouter);
+	routersCopy.erase(find(routersCopy.begin(), routersCopy.end(), nextRouter));
+	int minDist;
+	while (routersCopy.size() > 0) {
+		minDist = 9999;
+		std::cout << routersCopy.size() << std::endl;
+		for (auto & router : cables) {
+			nextRouter = router.closestCable(routersCopy);//prochain router à cabler
+			if (nextRouter.distance(router) < minDist) {
+				minDist = nextRouter.distance(router);
+				routerB = nextRouter;
+				routerA = router;
+			}
+		}
+		routersCopy2.push_back(routerB);
+		plusProcheCable = routerB.closestCable(cables);//cable ou router le plus proche pour le cablage
+		std::vector<Point> link = routerB.getCablesDiagTo(plusProcheCable);//calcul des cables à ajouter
+		link.push_back(Point(routerB.getCoordX(), routerB.getCoordY(), CABLE));// a commenter pour voir l'effet
+		for (auto &cable : link) {
+			if (find(cables.begin(), cables.end(), cable) == cables.end()) {//newCable UNIQUE !!!
+				cables.push_back(cable);
+			}
+		}
+		routersCopy.erase(find(routersCopy.begin(), routersCopy.end(), routerB));//suppression du router cablé
+		//oldRouter = nextRouter;//le nouveau routers devien l'ancien
+	}
+	/*cables.push_back(Point(backboneRow, backboneCol, CABLE));
 	assert(routerSorted.size() == routers.size());
 	// 2 possibilités : utiliser les routeurs trié en fonction de leur distance au backbone ou juste dans l'ordre ou il ont été ajoutés
 	// pas l'air d'avoir beaucoup de différences ?
@@ -312,7 +351,7 @@ void ProblemData::depotRouter() {
 				cables.push_back(cable);
 			}
 		}
-	}
+	}*/
 
 	int budgetRestant = maxBudgetInit - routers.size() * routerPrice - cables.size() * connectPrice;
 	std::cout << "BUDGET RESTANT : " << budgetRestant << std::endl;
@@ -395,7 +434,7 @@ void ProblemData::depotRouter() {
 	std::cout << "Sorting des cables" << std::endl;
 	Point backbone(backboneRow, backboneCol, CABLE);
 	//suppression du point backbone avant de sort, il avait été utile pour trouver le plus court distance router cable
-	cables.erase(cables.begin());
+	//cables.erase(cables.begin());
 	sorting(cables, cablesSorted, backbone);
 }
 
