@@ -118,21 +118,7 @@ void dump(const char* filename, std::vector<Point> routers) {
 
 	monFlux.close();
 }
-//Premier solution de dépot de routers
-/*vector<Point> ProblemData::depotRouter() {
-vector<Point> routers;
-//ajout du backbone car besoin dans le graphe couvrant
-routers.push_back(Point(backboneRow, backboneCol, CABLE));
 
-for (int x = routerRange; x < row; x += (2 * routerRange + 1)) {
-for (int y = routerRange; y < col; y += (2 * routerRange + 1)) {
-if (mapEntree[x][y].getType() == TARGET) {
-routers.push_back(Point(x, y, ROUTER));
-}
-}
-}
-return routers;
-}*/
 
 long ProblemData::potentielWifi(int x, int y) const {
 	long score = 0;
@@ -220,15 +206,6 @@ void ProblemData::depotRouter() {
 				}
 			}
 		}
-		/*for (int x = routerRange; x < row - routerRange; x += 5) {
-		for (int y = routerRange; y < col - routerRange; y += 5) {
-		value = potentielWifi(x, y) - distance(x, y);
-		if (value > potentielValue) {
-		maxPotentiel = Point(x, y, ROUTER);
-		potentielValue = value;
-		}
-		}
-		}*/
 
 		//Ajout du router
 		if (potentielValue == 0) {
@@ -336,22 +313,8 @@ void ProblemData::depotRouter() {
 			}
 		}
 		routersCopy.erase(find(routersCopy.begin(), routersCopy.end(), routerB));//suppression du router cablé
-		//oldRouter = nextRouter;//le nouveau routers devien l'ancien
 	}
-	/*cables.push_back(Point(backboneRow, backboneCol, CABLE));
-	assert(routerSorted.size() == routers.size());
-	// 2 possibilités : utiliser les routeurs trié en fonction de leur distance au backbone ou juste dans l'ordre ou il ont été ajoutés
-	// pas l'air d'avoir beaucoup de différences ?
-	for (auto &router : routers) {
-		plusProcheCable = router.closestCable(cables);
-		std::vector<Point> link = router.getCablesDiagTo(plusProcheCable);
-		link.push_back(Point(router.getCoordX(), router.getCoordY(), CABLE));
-		for (auto &cable : link) {
-			if (find(cables.begin(), cables.end(), cable) == cables.end()) {//newCable UNIQUE !!!
-				cables.push_back(cable);
-			}
-		}
-	}*/
+
 
 	int budgetRestant = maxBudgetInit - routers.size() * routerPrice - cables.size() * connectPrice;
 	std::cout << "BUDGET RESTANT : " << budgetRestant << std::endl;

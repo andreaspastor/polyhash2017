@@ -53,18 +53,7 @@ int main(int argc, char *argv[])
 	std::cout << "On a depose " << data.getNbRouters() << " routeurs sur la carte." << std::endl;
 	std::cout << "Score recuperer pour avoir convert des cellules : " << scoreCellsCovered << std::endl;
 #endif 
-	
-	/*Point ptA = Point(0, 1, TARGET);
-	Point ptB = Point(5, -10, TARGET);
-	vector<Point> liste = ptA.getCablesToB(ptB);
-	for (int f = 0; f < liste.size(); f++) {
-		cout << liste[f].getCoordX() << " - " << liste[f].getCoordY() << endl;
-	}*/
-	
-	/*Graph cables = Graph(data.getRouters());
-	cables.resolve();
-	
-	std::vector<Point> listCables = data.getRepartition(cables.parent);*/
+
 	data.dumpInFile(output);
 	return 0;
 }
