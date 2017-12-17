@@ -182,7 +182,6 @@ void ProblemData::depotRouter() {
 	for (int x = 0; x < row; x++) {
 		mapSearchCab.push_back(std::vector<double>());
 		mapSearchCov.push_back(std::vector<double>());
-		//std::cout << x << " / " << row << std::endl;
 		for (int y = 0; y < col; y++) {
 			mapSearchCov[x].push_back(potentielWifi(x, y));
 			mapSearchCab[x].push_back(distance(x, y));
