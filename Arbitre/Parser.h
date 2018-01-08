@@ -6,7 +6,7 @@
 #include <unordered_map>
 #include <utility>
 
-//D�commenter pour tester
+//Décommenter pour tester
 //#define DEBUG
 
 struct HashPair {
@@ -15,6 +15,8 @@ struct HashPair {
 	}
 };
 
+
+//Classe principale pour l'arbitrage
 class Parser {
 public:
 	Parser();

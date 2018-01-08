@@ -8,14 +8,11 @@
 
 using namespace std;
 
-Parser::Parser() {
+//Constructeur et desctructeur de la classe
+Parser::Parser() {}
+Parser::~Parser() {}
 
-}
-
-Parser::~Parser() {
-
-}
-
+//Parsing des informations dans les données d'entrée
 void Parser::ParseRule(const char* filename) {
 	ifstream file(filename);
 	if (!file) {
@@ -129,6 +126,8 @@ void Parser::ParseAnswer(const char* filename) {
 	file.close();
 }
 
+
+//Fonction pour initialiser la map de solution
 void Parser::initialiseMapSolution()
 {
 	for (int i = 0; i < row; i++) {
@@ -138,16 +137,19 @@ void Parser::initialiseMapSolution()
 	}
 }
 
+//Fonction pour get des informations sur la carte
 Point & Parser::getPointMapSolution(unsigned int x, unsigned int y)
 {
 	return map_solution[std::pair<unsigned int, unsigned int>(x,y)];
 }
 
+//Fonction pour set des informations dans la carte
 void Parser::setPointMapSolution(const Point & p)
 {
 	map_solution[std::make_pair(p.getCoordX(), p.getCoordY())] = p;
 }
 
+//Fonction pour verifier si un routeur est connecté au backbone
 bool Parser::areRoutersConnectedToBackbone(){
 	bool founded = false;
 	initialiseMapSolution();
@@ -206,18 +208,12 @@ bool Parser::isBudgetRespected(){
 	return budgetCalculated <= maxBudget;
 }
 
+//Fonction pour tester toutes les règles
 bool Parser::areAllRulesRespected(){
-	if (isBudgetRespected()) {
-		if (areRoutersNotInWalls()) {
-			if (areRoutersConnectedToBackbone()) {
-				return true;
-			}
-		}
-	}
-	return false;
-	//return (isBudgetRespected() && !areRoutersInWalls() && areRoutersConnectedToBackbone());
+	return (isBudgetRespected() && areRoutersNotInWalls() && areRoutersConnectedToBackbone())
 }
 
+//Test si un routeur donnée couvre une cellule donnée
 bool Parser::isRouterCoveringCell(int ptAx, int ptAy, int ptBx, int ptBy) const{
 	int xmin = fmin(ptAx, ptBx);
 	int xmax = fmax(ptAx, ptBx);
@@ -233,6 +229,7 @@ bool Parser::isRouterCoveringCell(int ptAx, int ptAy, int ptBx, int ptBy) const{
 	return true;
 }
 
+//On compte combien de cellules sont bien couvertes par l'ensemble des routeurs de la solution
 void Parser::coverCellsMap(){
 	realNumberOfCellsConnected = 0;
 	int range = routerRange;
@@ -250,7 +247,7 @@ void Parser::coverCellsMap(){
 	}
 }
 
+//Fonction pour calculer le score final
 int Parser::computeScore() const {
-	
 	return 1000 * realNumberOfCellsConnected + (maxBudget - budgetCalculated);
 }

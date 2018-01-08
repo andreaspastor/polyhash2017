@@ -8,8 +8,6 @@
 #include "Object.h"
 
 
-
-
 void parseArgs(int argc)
 {
 	if (argc != 3) {
@@ -38,17 +36,18 @@ int main(int argc, char *argv[])
 	const char* filename(input);
 	data.ParseFile(filename);
 
-	//Pour pas pourrir les performances vis à vis de l'arbitre
 #ifdef DEBUG
 	std::cout << data(0, 0) << std::endl;
 	std::cout << "Nombres de points à disposition sur la carte : " << data.calculMaxMoney() << std::endl;
 #endif 
-	
+#ifdef DEBUG
 	std::cout << "Debut du depot des routeurs" << std::endl;
-	data.depotRouter();
-	long scoreCellsCovered = data.scoreRouters();
+#endif
+
+	data.depotRouter();	
 
 #ifdef DEBUG
+	long scoreCellsCovered = data.scoreRouters();
 	std::cout << "On a depose " << data.getNbRouters() << " routeurs sur la carte." << std::endl;
 	std::cout << "Score recuperer pour avoir convert des cellules : " << scoreCellsCovered << std::endl;
 #endif 
