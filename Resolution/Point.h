@@ -4,6 +4,8 @@
 #include <ostream>
 #include <vector>
 
+
+//Classe stockant les informations d'une cellule de la map
 class Point
 {
 public:
@@ -28,6 +30,7 @@ public:
 	static int backboneRow;
 	static int backboneCol;
 protected:
+	//Stockage de l'emplacement de la cellule et de son type
 	int coordX;
 	int coordY;
 	Object type;

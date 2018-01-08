@@ -8,9 +8,6 @@
 #include "Parser.h"
 #include "FileHandling.hpp"
 
-/* How to use?
-Compile all startegies tha you want to time and test and put the file .exe in "Strategies" directory
-*/
 
 using namespace std;
 

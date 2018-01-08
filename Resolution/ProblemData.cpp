@@ -8,16 +8,11 @@
 #include <set>
 #include <cassert>
 
+//Constructeur et destructeur de notre classe contenant la problème et sa résolution
+ProblemData::ProblemData(){}
+ProblemData::~ProblemData(){}
 
-ProblemData::ProblemData()
-{
-}
-
-
-ProblemData::~ProblemData()
-{
-}
-
+//Fonction permettant de parser les fichiers d'entrée données
 void ProblemData::ParseFile(const char * filename)
 {
 	std::ifstream file(filename);
@@ -86,6 +81,7 @@ void ProblemData::ParseFile(const char * filename)
 #endif
 }
 
+//Fonction permettant de pouvoir sauvegarder les résultats de la résolution
 void ProblemData::dumpInFile(const char * filename)
 {
 
@@ -101,9 +97,13 @@ void ProblemData::dumpInFile(const char * filename)
 			monFlux << router.getCoordX() << " " << router.getCoordY() << std::endl;
 		}
 	}
+	else {
+		std::cout << "ERREUR: Impossible d'ouvrir le fichier." << std::endl;
+	}
 	monFlux.close();
 }
 
+//Fonction permettant de pouvoir sauvegarder les résultats de la résolution
 void dump(const char* filename, std::vector<Point> routers) {
 	std::ofstream monFlux(filename);
 
@@ -119,7 +119,7 @@ void dump(const char* filename, std::vector<Point> routers) {
 	monFlux.close();
 }
 
-
+//Fonction calculant le potentiel de wifi dans une zone si on y place un routeur
 long ProblemData::potentielWifi(int x, int y) const {
 	long score = 0;
 	if (x == backboneRow && y == backboneRow) {
@@ -139,6 +139,7 @@ long ProblemData::potentielWifi(int x, int y) const {
 	return score;
 }
 
+//Fonction pour calculer la plus courte distance entre les coordonnées et le cable le plus proche
 int ProblemData::distance(int x, int y) const {
 	int xx, yy, dist;
 	int minDist = 9999;
@@ -153,6 +154,7 @@ int ProblemData::distance(int x, int y) const {
 	return minDist;
 }
 
+//Fonction pour calculer la plus courte distance entre une coordonnée et les éléments d'une liste
 int ProblemData::distanceNewCables(int x, int y, const std::vector<Point> & newCables) const {
 	int xx, yy, dist;
 	int minDist = 9999;
@@ -167,6 +169,7 @@ int ProblemData::distanceNewCables(int x, int y, const std::vector<Point> & newC
 	return minDist;
 }
 
+//Fonction qui permet en utilisant notre stratégie de déposer les routeurs
 void ProblemData::depotRouter() {
 	cables.push_back(Point(backboneRow, backboneCol, CABLE)); //pour le parcours de la mesure de distance au depot du premier router
 
@@ -400,6 +403,7 @@ void ProblemData::depotRouter() {
 	sorting(cables, cablesSorted, backbone);
 }
 
+//Fonction permettant de générer le cablage entre l'ensemble des routeurs
 std::vector<Point> ProblemData::getRepartition(const std::vector<int> & parent)
 {
 	Point backbone(backboneRow, backboneCol, CABLE);
@@ -425,6 +429,7 @@ std::vector<Point> ProblemData::getRepartition(const std::vector<int> & parent)
 	return listCablesSorted;
 }
 
+//Fonction qui permet de ranger les cables de manière souhaitée par les règles du challenge
 void sorting(const std::vector<Point> & listeRef, std::vector<Point> & liste, const Point & ptCentre)
 {
 	for (auto &pt : listeRef) {
@@ -435,6 +440,7 @@ void sorting(const std::vector<Point> & listeRef, std::vector<Point> & liste, co
 	}
 }
 
+//Fonction qui verifie si une cellule B est couverte si on place un routeur sur la cellule A 
 bool ProblemData::isCover(const Point& ptA, const Point& ptB) const
 {
 	int xmin = std::fmin(ptA.getCoordX(), ptB.getCoordX());
@@ -451,6 +457,7 @@ bool ProblemData::isCover(const Point& ptA, const Point& ptB) const
 	return true;
 }
 
+//Fonction similaire qui utilise des int
 bool ProblemData::isCover(int ptAx, int ptAy, int ptBx, int ptBy) const
 {
 	int xmin = fmin(ptAx, ptBx);
@@ -467,6 +474,7 @@ bool ProblemData::isCover(int ptAx, int ptAy, int ptBx, int ptBy) const
 	return true;
 }
 
+//Fonction qui calcule la score obtenu à partir d'une liste de routeurs
 long ProblemData::scoreRouters() {
 	long score = 0;
 	for (auto &router : routers) {
@@ -482,6 +490,7 @@ long ProblemData::scoreRouters() {
 	return score;
 }
 
+//Fonction qui calcule le potentiel maximum de la carte si l'on arrive à la couvrir complètement
 long ProblemData::calculMaxMoney() const
 {
 	long somme = 0;
@@ -496,6 +505,7 @@ long ProblemData::calculMaxMoney() const
 	return somme * 1000;
 }
 
+//Redéfinition de l'opérateur pour afficher l'ensemble des informations du problème
 std::ostream& operator<<(std::ostream& os, const ProblemData& data)
 {
 	os << "Lignes : " << data.row << std::endl;

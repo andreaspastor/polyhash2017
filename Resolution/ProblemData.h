@@ -8,6 +8,7 @@
 //Décommenter  la ligne pour avoir les affichages
 //#define DEBUG
 
+//Classe principale de la résolution
 class ProblemData
 {
 public:
@@ -25,6 +26,7 @@ public:
 	bool isCover(int ptAx, int ptAy, int ptBx, int ptBy) const;
 	long scoreRouters();
 	long calculMaxMoney() const;
+
 	friend std::ostream& operator<<(std::ostream& os, const ProblemData& data);
 
 	inline Point operator()(unsigned int row, unsigned int col) const { return mapEntree[row][col]; }
@@ -42,6 +44,7 @@ public:
 	inline std::vector<Point> getRouters() const { return routers; }
 
 protected:
+	//Ensemble des informations sur le problème à resoudre
 	int row;
 	int col;
 	int routerRange;
@@ -51,13 +54,20 @@ protected:
 	int maxBudgetInit;
 	int backboneRow;
 	int backboneCol;
+
+	//Stockage des informations d'origine
 	std::vector<std::vector<Point>> mapEntree;
+	//Modification au fur et à mesure du depot des routeurs de la map d'origine
 	std::vector<std::vector<Point>> mapSortie;
+	//Map de recherche pour la couverture des routeurs (potentiel de point gagné pour chaque routeur)
 	std::vector<std::vector<double>> mapSearchCov;
+	//Map de recherche pour le coût de cablage de chaque cellule
 	std::vector<std::vector<double>> mapSearchCab;
+
+	//Stockage de la solution
 	std::vector<Point> routers;
 	std::vector<Point> cables;
-	std::vector<Point> cablesSorted;
+	std::vector<Point> cablesSorted;//Cables rangés selon les règles de l'énoncée
 };
 
 void sorting(const std::vector<Point> & listeRef, std::vector<Point> & liste, const Point & ptCentre);
