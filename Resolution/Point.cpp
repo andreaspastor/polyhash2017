@@ -11,16 +11,14 @@ Point::~Point(){}
 Point::Point(int x, int y, Object object) : coordX(x), coordY(y), type(object) {}
 
 //Calcul de distance entre 2 Point
-unsigned int Point::distance(const Point &ptB) const
-{
+unsigned int Point::distance(const Point &ptB) const {
 	int x = std::abs(coordX - ptB.coordX);
 	int y = std::abs(coordY - ptB.coordY);
 	return std::fmin(x, y) + std::abs(x - y);
 }
 
 //Fonctions pour générer les clables sur le chemin entre 2 Point
-std::vector<Point> Point::getCablesToB(const Point &ptB) const
-{
+std::vector<Point> Point::getCablesToB(const Point &ptB) const {
 	std::vector<Point> listCables;
 	int deltaX = std::abs(coordX - ptB.coordX);
 	int deltaY = std::abs(coordY - ptB.coordY);
@@ -44,8 +42,7 @@ std::vector<Point> Point::getCablesToB(const Point &ptB) const
 }
 
 //Fonctions pour générer les clables sur le chemin entre 2 Point en les placant de manière oblique
-std::vector<Point> Point::getCablesDiagTo(const Point & ptB) const
-{
+std::vector<Point> Point::getCablesDiagTo(const Point & ptB) const {
 	std::vector<Point> listCables;
 	int x; //variable de parcours
 	int direction;
@@ -123,8 +120,7 @@ std::vector<Point> Point::getCablesDiagTo(const Point & ptB) const
 }
 
 //Fonction pour savoir si 2 Point sont voisins
-bool Point::voisinDe(const Point & ptB) const
-{
+bool Point::voisinDe(const Point & ptB) const {
 	int deltaX = std::abs(ptB.coordX - coordX);
 	int deltaY = std::abs(ptB.coordY - coordY);
 	if (deltaX > 1 || deltaY > 1) {
@@ -137,8 +133,7 @@ bool Point::voisinDe(const Point & ptB) const
 }
 
 //Fonctions permmetant de rechercher le cable déjà posé le plus proche
-Point Point::closestCable(const std::vector<Point>& listCables) const
-{
+Point Point::closestCable(const std::vector<Point>& listCables) const {
 	Point closest;
 	int xx, yy, dist;
 	int minDist = 9999;
@@ -155,8 +150,7 @@ Point Point::closestCable(const std::vector<Point>& listCables) const
 }
 
 //Redéfinition de l'opérateur de test d'égalité
-bool operator==(Point const & ptA, Point const & ptB)
-{
+bool operator==(Point const & ptA, Point const & ptB) {
 	if (ptA.coordX == ptB.coordX && ptA.coordY == ptB.coordY && ptA.type == ptB.type) {
 		return true;
 	}

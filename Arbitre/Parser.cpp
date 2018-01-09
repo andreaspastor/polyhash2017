@@ -128,8 +128,7 @@ void Parser::ParseAnswer(const char* filename) {
 
 
 //Fonction pour initialiser la map de solution
-void Parser::initialiseMapSolution()
-{
+void Parser::initialiseMapSolution() {
 	for (int i = 0; i < row; i++) {
 		for (int j = 0; j < col; j++) {
 			setPointMapSolution(Point(i, j, VIDE));
@@ -138,19 +137,17 @@ void Parser::initialiseMapSolution()
 }
 
 //Fonction pour get des informations sur la carte
-Point & Parser::getPointMapSolution(unsigned int x, unsigned int y)
-{
+Point & Parser::getPointMapSolution(unsigned int x, unsigned int y) {
 	return map_solution[std::pair<unsigned int, unsigned int>(x,y)];
 }
 
 //Fonction pour set des informations dans la carte
-void Parser::setPointMapSolution(const Point & p)
-{
+void Parser::setPointMapSolution(const Point & p) {
 	map_solution[std::make_pair(p.getCoordX(), p.getCoordY())] = p;
 }
 
 //Fonction pour verifier si un routeur est connecté au backbone
-bool Parser::areRoutersConnectedToBackbone(){
+bool Parser::areRoutersConnectedToBackbone() {
 	bool founded = false;
 	initialiseMapSolution();
 	coverCellsMap();
@@ -200,7 +197,7 @@ bool Parser::areRoutersNotInWalls() const {
 
 //Check if budget is respected (budged <= maxBudget)
 //Return bool (0 if not respected)
-bool Parser::isBudgetRespected(){
+bool Parser::isBudgetRespected() {
 	budgetCalculated = numberOfCellsConnected * connectPrice + numberOfRouters * routerPrice;
 #ifdef DEBUG
 	cout << "Budget max: " << maxBudget << " | " << "Calculated budget: " << budgetCalculated << endl;
@@ -209,12 +206,12 @@ bool Parser::isBudgetRespected(){
 }
 
 //Fonction pour tester toutes les règles
-bool Parser::areAllRulesRespected(){
-	return (isBudgetRespected() && areRoutersNotInWalls() && areRoutersConnectedToBackbone())
+bool Parser::areAllRulesRespected() {
+	return (isBudgetRespected() && areRoutersNotInWalls() && areRoutersConnectedToBackbone());
 }
 
 //Test si un routeur donnée couvre une cellule donnée
-bool Parser::isRouterCoveringCell(int ptAx, int ptAy, int ptBx, int ptBy) const{
+bool Parser::isRouterCoveringCell(int ptAx, int ptAy, int ptBx, int ptBy) const {
 	int xmin = fmin(ptAx, ptBx);
 	int xmax = fmax(ptAx, ptBx);
 	int ymin = fmin(ptAy, ptBy);
@@ -230,7 +227,7 @@ bool Parser::isRouterCoveringCell(int ptAx, int ptAy, int ptBx, int ptBy) const{
 }
 
 //On compte combien de cellules sont bien couvertes par l'ensemble des routeurs de la solution
-void Parser::coverCellsMap(){
+void Parser::coverCellsMap() {
 	realNumberOfCellsConnected = 0;
 	int range = routerRange;
 	for (auto &router : routers) {

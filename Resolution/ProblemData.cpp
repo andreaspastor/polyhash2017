@@ -13,8 +13,7 @@ ProblemData::ProblemData(){}
 ProblemData::~ProblemData(){}
 
 //Fonction permettant de parser les fichiers d'entrée données
-void ProblemData::ParseFile(const char * filename)
-{
+void ProblemData::ParseFile(const char * filename) {
 	std::ifstream file(filename);
 	if (!file) {
 		std::cerr << "Ce fichier n'existe pas !" << std::endl;
@@ -42,6 +41,7 @@ void ProblemData::ParseFile(const char * filename)
 	backboneCol = std::stoi(line);
 	Point::backboneCol = backboneCol;
 
+	//Afin de changer de mode de parsing entre 2 lignes
 	file.ignore();
 
 	unsigned int currentRow = 0;
@@ -82,8 +82,7 @@ void ProblemData::ParseFile(const char * filename)
 }
 
 //Fonction permettant de pouvoir sauvegarder les résultats de la résolution
-void ProblemData::dumpInFile(const char * filename)
-{
+void ProblemData::dumpInFile(const char * filename) {
 
 	std::ofstream monFlux(filename);
 
@@ -403,35 +402,10 @@ void ProblemData::depotRouter() {
 	sorting(cables, cablesSorted, backbone);
 }
 
-//Fonction permettant de générer le cablage entre l'ensemble des routeurs
-std::vector<Point> ProblemData::getRepartition(const std::vector<int> & parent)
-{
-	Point backbone(backboneRow, backboneCol, CABLE);
 
-	for (int x = 1; x < parent.size(); x++) {
-		Point routerA = routers[x];
-		Point routerB = routers[parent[x]];
-		//std::vector<Point> linkCables = routerA.getCablesToB(routerB);
-		std::vector<Point> linkCables = routerA.getCablesDiagTo(routerB);
-		for (auto &cable : linkCables) {
-			if (find(cables.begin(), cables.end(), cable) == cables.end()) {
-				cables.push_back(cable);
-			}
-		}
-	}
-#ifdef DEBUG
-	std::cout << cables.size() << std::endl;
-#endif 
-
-	std::vector<Point> listCablesSorted;
-
-	sorting(cables, listCablesSorted, backbone);
-	return listCablesSorted;
-}
 
 //Fonction qui permet de ranger les cables de manière souhaitée par les règles du challenge
-void sorting(const std::vector<Point> & listeRef, std::vector<Point> & liste, const Point & ptCentre)
-{
+void sorting(const std::vector<Point> & listeRef, std::vector<Point> & liste, const Point & ptCentre) {
 	for (auto &pt : listeRef) {
 		if (pt.voisinDe(ptCentre) && find(liste.begin(), liste.end(), pt) == liste.end()) {
 			liste.push_back(pt);
@@ -441,8 +415,7 @@ void sorting(const std::vector<Point> & listeRef, std::vector<Point> & liste, co
 }
 
 //Fonction qui verifie si une cellule B est couverte si on place un routeur sur la cellule A 
-bool ProblemData::isCover(const Point& ptA, const Point& ptB) const
-{
+bool ProblemData::isCover(const Point& ptA, const Point& ptB) const {
 	int xmin = std::fmin(ptA.getCoordX(), ptB.getCoordX());
 	int xmax = std::fmax(ptA.getCoordX(), ptB.getCoordX());
 	int ymin = std::fmin(ptA.getCoordY(), ptB.getCoordY());
@@ -458,8 +431,7 @@ bool ProblemData::isCover(const Point& ptA, const Point& ptB) const
 }
 
 //Fonction similaire qui utilise des int
-bool ProblemData::isCover(int ptAx, int ptAy, int ptBx, int ptBy) const
-{
+bool ProblemData::isCover(int ptAx, int ptAy, int ptBx, int ptBy) const {
 	int xmin = fmin(ptAx, ptBx);
 	int xmax = fmax(ptAx, ptBx);
 	int ymin = fmin(ptAy, ptBy);
@@ -491,8 +463,7 @@ long ProblemData::scoreRouters() {
 }
 
 //Fonction qui calcule le potentiel maximum de la carte si l'on arrive à la couvrir complètement
-long ProblemData::calculMaxMoney() const
-{
+long ProblemData::calculMaxMoney() const {
 	long somme = 0;
 	for (auto &x : mapEntree) {
 		for (auto &y : x) {
@@ -506,8 +477,7 @@ long ProblemData::calculMaxMoney() const
 }
 
 //Redéfinition de l'opérateur pour afficher l'ensemble des informations du problème
-std::ostream& operator<<(std::ostream& os, const ProblemData& data)
-{
+std::ostream& operator<<(std::ostream& os, const ProblemData& data) {
 	os << "Lignes : " << data.row << std::endl;
 	os << "Colonnes : " << data.col << std::endl;
 	os << "Portee routeur : " << data.routerRange << std::endl;

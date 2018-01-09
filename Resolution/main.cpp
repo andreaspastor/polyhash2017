@@ -8,16 +8,14 @@
 #include "Object.h"
 
 
-void parseArgs(int argc)
-{
+void parseArgs(int argc) {
 	if (argc != 3) {
 		std::cerr << "Mauvais nombre d'arguments !" << std::endl;
 		exit(-1);
 	}
 }
 
-int main(int argc, char *argv[])
-{
+int main(int argc, char *argv[]) {
 
 	//A titre de debug pour le moment
 	const char *input;
@@ -27,7 +25,7 @@ int main(int argc, char *argv[])
 		output = argv[2];
 	}
 	else {
-		input = "lets_go_higher.in"; //lets_go_higher, rue_de_londres, opera
+		input = "charleston_road.in"; //lets_go_higher, rue_de_londres, opera
 		output = "..//Output//higher67b.out";
 	}
 

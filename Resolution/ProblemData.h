@@ -2,15 +2,13 @@
 
 #include "Object.h"
 #include "Point.h"
-#include "Graph.h"
 #include <vector>
 
 //Décommenter  la ligne pour avoir les affichages
 //#define DEBUG
 
 //Classe principale de la résolution
-class ProblemData
-{
+class ProblemData {
 public:
 	ProblemData();
 	virtual ~ProblemData();
@@ -21,7 +19,6 @@ public:
 	int distance(int x, int y) const;
 	int distanceNewCables(int x, int y, const std::vector<Point>& newCables) const;
 	void depotRouter();
-	std::vector<Point> getRepartition(const std::vector<int> & parent);
 	bool isCover(const Point & ptA, const Point & ptB) const;
 	bool isCover(int ptAx, int ptAy, int ptBx, int ptBy) const;
 	long scoreRouters();

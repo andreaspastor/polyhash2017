@@ -6,8 +6,7 @@
 
 
 //Classe stockant les informations d'une cellule de la map
-class Point
-{
+class Point {
 public:
 	Point();
 	Point(int x, int y, Object object);
