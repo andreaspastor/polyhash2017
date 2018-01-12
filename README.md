@@ -1,24 +1,17 @@
-# Hash Code 2017 développé par des étudiants de Polytech Nantes
+# Google Hash Code 2017 développé par des étudiants de Polytech Nantes
 
 ### Répartition des tâches
 
 | Étudiant | Tâche |
 | --- |---|
-| ARQUEY Antonin | Moteur de résolution |
-| PASTOR Andréas | Moteur de résolution |
-| LE CORGUILLE Laouenan | Moteur de résolution |
-| QUINQUENEL Nicolas | Arbitre et moteur de mesure des temps d'exécution |
-| GUILLET Mathis | Arbitre et moteur de mesure des temps d'exécution |
+| ARQUEY Antonin | Moteur de résolution (Parser et câblage) |
+| PASTOR Andréas | Moteur de résolution (Stratégie de résolution et pose des routeurs) |
+| QUINQUENEL Nicolas | Fonctions de validation et rédaction du rapport |
+| GUILLET Mathis | Fonctions de validation de l’arbitre |
+| LE CORGUILLE Laouenan | Fonctions de validation de l’arbitre |
 
-### Liens 
+### Comment lancer l'arbitre ?
 
-[Site de soumission des résultats et de calcul des scores](http://pitools.polytech.univ-nantes.prive/hashcode)
+Placer les fichiers d’entrée dans le même dossier que l'exécutable de l’arbitre.
 
-[Cours Madoc](http://madoc.univ-nantes.fr/course/view.php?id=30840)
-
-### Rendu
-
-* 2 exécutables
-* Rapport de 5 pages sur la stratégie et les choses pertinentes
-* __Date du rendu pour le vendredi 15 décembre__
-
+Exécuter l’arbitre en ligne de commande en précisant le chemin du répertoire contenant les exécutables des différentes stratégies et le nom du fichier de sortie qui sera généré dans le dossier courant.
