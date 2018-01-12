@@ -11,6 +11,14 @@
 
 using namespace std;
 
+/** Compute the time taken by the execution of the solution
+	It takes the average of 5 runs
+
+	@param executable string The executable file
+	@param input string The input file
+	@param strategy string The strategy file
+	@return double Time that the solution takes to execute
+*/
 double timeSolution(string &executable, string &input, string &strategy) {
 	//Implement clock cpu time later
 	double nb_test = 5;
@@ -30,6 +38,11 @@ double timeSolution(string &executable, string &input, string &strategy) {
 	return result;
 }
 
+/** Dump the results in a file
+
+	@param filename string The result's file
+	@param results vector<pair<string, double>> The data for the results
+*/
 void dumpResults(string &fileName, const vector<pair<string, double>> &results) {
 	
 	ofstream monFlux(fileName + ".out");
@@ -45,6 +58,12 @@ void dumpResults(string &fileName, const vector<pair<string, double>> &results) 
 	}
 }
 
+/** Check if the solution is valid or not
+
+	@param rule char The rule
+	@param solution char The solution
+	@return boolean True if the solution is valid
+*/
 bool isSolutionValid(const char *rule, const char *solution) {
 	Parser parser;
 	parser.ParseRule((string(rule)).c_str());
@@ -61,6 +80,11 @@ bool isSolutionValid(const char *rule, const char *solution) {
 	}
 }
 
+/** Execute every solutions
+
+	@param directory char The directory of the solutions
+	@param resultFile char The result file
+*/
 void compareSolutions(const char *directory, const char *resultFile) {
 
 	std::vector<std::string> entries = { "charleston_road.in", "rue_de_londres.in", "opera.in", "lets_go_higher.in" };
@@ -101,7 +125,12 @@ void compareSolutions(const char *directory, const char *resultFile) {
 
 }
 
+/** Main for the arbitration part
 
+	@param argc int Number of arguments
+	@param argv char[] The arguments
+	@return How the program exited
+*/
 int main(int argc, char *argv[])
 {
 	const char* directory;

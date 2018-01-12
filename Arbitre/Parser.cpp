@@ -8,11 +8,18 @@
 
 using namespace std;
 
-//Constructeur et desctructeur de la classe
+/** Constructor
+*/
 Parser::Parser() {}
+
+/** Destructor
+*/
 Parser::~Parser() {}
 
-//Parsing des informations dans les données d'entrée
+/** Parse the rule
+
+	@param filename char The file name
+*/
 void Parser::ParseRule(const char* filename) {
 	ifstream file(filename);
 	if (!file) {
@@ -69,7 +76,10 @@ void Parser::ParseRule(const char* filename) {
 	file.close();
 }
 
-//Parse the answer file
+/** Parse the answer file
+
+	@param filename char The file name
+*/
 void Parser::ParseAnswer(const char* filename) {
 	ifstream file(filename);
 	if (!file) {
@@ -126,8 +136,8 @@ void Parser::ParseAnswer(const char* filename) {
 	file.close();
 }
 
-
-//Fonction pour initialiser la map de solution
+/** Initialize the map for the solution
+*/
 void Parser::initialiseMapSolution() {
 	for (int i = 0; i < row; i++) {
 		for (int j = 0; j < col; j++) {
@@ -136,17 +146,28 @@ void Parser::initialiseMapSolution() {
 	}
 }
 
-//Fonction pour get des informations sur la carte
+/** Get the points for the map
+
+	@param x int Coordonate x
+	@param y int Coordonate y
+	@return Point the Point of the given coordonates
+*/
 Point & Parser::getPointMapSolution(unsigned int x, unsigned int y) {
 	return map_solution[std::pair<unsigned int, unsigned int>(x,y)];
 }
 
-//Fonction pour set des informations dans la carte
+/** Set the points for the map
+
+	@param p Point the Point to set
+*/
 void Parser::setPointMapSolution(const Point & p) {
 	map_solution[std::make_pair(p.getCoordX(), p.getCoordY())] = p;
 }
 
-//Fonction pour verifier si un routeur est connecté au backbone
+/** Function that checks if the routers are connected to the backbone
+
+	@return boolean True the routeurs are connected
+*/
 bool Parser::areRoutersConnectedToBackbone() {
 	bool founded = false;
 	initialiseMapSolution();
@@ -182,8 +203,10 @@ bool Parser::areRoutersConnectedToBackbone() {
 	return true;
 }
 
-//Check if routers are in walls or not
-//Return 1 if true, 0 otherwise
+/** Check if routers are in walls or not
+
+	@return boolean True if routers are in walls
+*/
 bool Parser::areRoutersNotInWalls() const {
 	//Check for each routers if his coordonnates are walls or not
 	for (auto &router : routers) {
@@ -195,8 +218,10 @@ bool Parser::areRoutersNotInWalls() const {
 	return true;
 }
 
-//Check if budget is respected (budged <= maxBudget)
-//Return bool (0 if not respected)
+/** Check if budget is respected 
+
+	@return boolean True si le budget est respecté (budged <= maxBudget)
+*/
 bool Parser::isBudgetRespected() {
 	budgetCalculated = numberOfCellsConnected * connectPrice + numberOfRouters * routerPrice;
 #ifdef DEBUG
@@ -205,12 +230,22 @@ bool Parser::isBudgetRespected() {
 	return budgetCalculated <= maxBudget;
 }
 
-//Fonction pour tester toutes les règles
+/** Function to try every rules
+
+	@return boolean True if all the rules are respected
+*/
 bool Parser::areAllRulesRespected() {
 	return (isBudgetRespected() && areRoutersNotInWalls() && areRoutersConnectedToBackbone());
 }
 
-//Test si un routeur donnée couvre une cellule donnée
+/** Test if a router cover a given cell
+
+	@param ptAx int  Point A.x
+	@param ptAy int  Point A.y
+	@param ptBx int  Point B.x
+	@param ptBy int  Point B.y
+	@return boolean True if the router cover the cell
+*/
 bool Parser::isRouterCoveringCell(int ptAx, int ptAy, int ptBx, int ptBy) const {
 	int xmin = fmin(ptAx, ptBx);
 	int xmax = fmax(ptAx, ptBx);
@@ -226,7 +261,8 @@ bool Parser::isRouterCoveringCell(int ptAx, int ptAy, int ptBx, int ptBy) const 
 	return true;
 }
 
-//On compte combien de cellules sont bien couvertes par l'ensemble des routeurs de la solution
+/**	Count how many cells are being covered by every routers
+*/
 void Parser::coverCellsMap() {
 	realNumberOfCellsConnected = 0;
 	int range = routerRange;
@@ -244,7 +280,10 @@ void Parser::coverCellsMap() {
 	}
 }
 
-//Fonction pour calculer le score final
+/**	Compute the final score
+
+	@return int the final score
+*/
 int Parser::computeScore() const {
 	return 1000 * realNumberOfCellsConnected + (maxBudget - budgetCalculated);
 }
