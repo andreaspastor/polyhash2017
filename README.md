@@ -12,6 +12,8 @@
 
 ### Comment lancer l'arbitre ?
 
+Depuis le dossier Executables, lancer la commande suivante: ./Arbitre.exe ./Strategies results.txt
+
 Placer les fichiers d’entrée dans le même dossier que l'exécutable de l’arbitre.
 
 Exécuter l’arbitre en ligne de commande en précisant le chemin du répertoire contenant les exécutables des différentes stratégies et le nom du fichier de sortie qui sera généré dans le dossier courant.
