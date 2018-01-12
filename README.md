@@ -1,4 +1,4 @@
-# Google Hash Code 2017 développé par des étudiants de Polytech Nantes
+# Google Hash Code 2017 développé en C++
 
 ### Répartition des tâches
 
@@ -7,7 +7,7 @@
 | ARQUEY Antonin | Moteur de résolution (Parser et câblage) |
 | PASTOR Andréas | Moteur de résolution (Stratégie de résolution et pose des routeurs) |
 | QUINQUENEL Nicolas | Fonctions de validation et rédaction du rapport |
-| GUILLET Mathis | Fonctions de validation de l’arbitre |
+| GUILLET Mathis | Moteur des temps d'exécutions |
 | LE CORGUILLE Laouenan | Fonctions de validation de l’arbitre |
 
 ### Comment lancer l'arbitre ?
