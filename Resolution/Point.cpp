@@ -5,19 +5,38 @@
 int Point::backboneCol = 0;
 int Point::backboneRow = 0;
 
-//Constructeur et destructeur de la classe
+/** Constructor
+*/
 Point::Point(){}
+
+/** The destructor
+*/
 Point::~Point(){}
+
+/** Constructor with given parameters
+	
+	@param x int Coordinate x
+	@param y int Coordinate y
+	@param object Object The object
+*/
 Point::Point(int x, int y, Object object) : coordX(x), coordY(y), type(object) {}
 
-//Calcul de distance entre 2 Point
+/** Compute distance between 2 points
+	
+	@param B Point The point to compare with
+	@return int The distance
+*/
 unsigned int Point::distance(const Point &ptB) const {
 	int x = std::abs(coordX - ptB.coordX);
 	int y = std::abs(coordY - ptB.coordY);
 	return std::fmin(x, y) + std::abs(x - y);
 }
 
-//Fonctions pour générer les clables sur le chemin entre 2 Point
+/** Generate the way for cables between 2 points
+	
+	@param ptB Point the ending point for the way
+	@return vector<Point> The list of points
+*/
 std::vector<Point> Point::getCablesToB(const Point &ptB) const {
 	std::vector<Point> listCables;
 	int deltaX = std::abs(coordX - ptB.coordX);
@@ -41,7 +60,11 @@ std::vector<Point> Point::getCablesToB(const Point &ptB) const {
 	return listCables;
 }
 
-//Fonctions pour générer les clables sur le chemin entre 2 Point en les placant de manière oblique
+/** Generate the way for cables between 2 points with oblique method
+	
+	@param ptB Point the ending point for the way
+	@return vector<Point> The list of points
+*/
 std::vector<Point> Point::getCablesDiagTo(const Point & ptB) const {
 	std::vector<Point> listCables;
 	int x; //variable de parcours
@@ -119,7 +142,11 @@ std::vector<Point> Point::getCablesDiagTo(const Point & ptB) const {
 	return listCables;
 }
 
-//Fonction pour savoir si 2 Point sont voisins
+/** Check if 2 points are neighbours
+	
+	@param ptB Point The point to compare with
+	@return boolean True if neighbour
+*/
 bool Point::voisinDe(const Point & ptB) const {
 	int deltaX = std::abs(ptB.coordX - coordX);
 	int deltaY = std::abs(ptB.coordY - coordY);
@@ -132,7 +159,11 @@ bool Point::voisinDe(const Point & ptB) const {
 	return true;
 }
 
-//Fonctions permmetant de rechercher le cable déjà posé le plus proche
+/** Look at the closest point
+		
+	@param listCables vector<Point> The list of cables
+	@return Point The closest point
+*/
 Point Point::closestCable(const std::vector<Point>& listCables) const {
 	Point closest;
 	int xx, yy, dist;
@@ -149,7 +180,8 @@ Point Point::closestCable(const std::vector<Point>& listCables) const {
 	return closest;
 }
 
-//Redéfinition de l'opérateur de test d'égalité
+/** Redefinition of operator ==
+*/
 bool operator==(Point const & ptA, Point const & ptB) {
 	if (ptA.coordX == ptB.coordX && ptA.coordY == ptB.coordY && ptA.type == ptB.type) {
 		return true;
@@ -157,7 +189,8 @@ bool operator==(Point const & ptA, Point const & ptB) {
 	return false;
 }
 
-//Redéfintion de l'affichage
+/** Redefinition of operator <<
+*/
 std::ostream& operator<<(std::ostream& os, const Point& p) {
 	os << "Le point a pour coordonnées (" << p.coordX << ", " << p.coordY << ")" << std::endl;
 	os << "Le type du point est " << p.type << std::endl;
