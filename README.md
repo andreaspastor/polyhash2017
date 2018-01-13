@@ -1,21 +1,4 @@
-# Google Hash Code 2017 développé en C++
+# School project : A solution to the Google Hashcode 2017
 
-### Répartition des tâches
-
-| Étudiant | Tâche |
-| --- |---|
-| ARQUEY Antonin | Moteur de résolution (Parser et câblage) |
-| PASTOR Andréas | Moteur de résolution (Stratégie de résolution et pose des routeurs) |
-| QUINQUENEL Nicolas | Fonctions de validation et rédaction du rapport |
-| GUILLET Mathis | Moteur des temps d'exécutions |
-| LE CORGUILLE Laouenan | Fonctions de validation de l’arbitre |
-
-### Comment lancer l'arbitre ?
-
-Depuis le dossier Executables, lancer la commande suivante : 
-
-`./Arbitre.exe ./Strategies results.txt`
-
-Placer les fichiers d’entrée dans le même dossier que l'exécutable de l’arbitre.
-
-Exécuter l’arbitre en ligne de commande en précisant le chemin du répertoire contenant les exécutables des différentes stratégies et le nom du fichier de sortie qui sera généré dans le dossier courant.
+This is a solution written in C++ to the 2017 Google Hashcode final task, which is a problem where we needed to optimize router placement.
+There is also another program which can validate a solution and calculate the score.
